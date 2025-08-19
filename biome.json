@@ -1,5 +1,4 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -26,21 +25,17 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": {
-          "level": "error",
-          "fix": "none"
-        },
-        "useExhaustiveDependencies": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
+        "useUniqueElementIds": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noArrayIndexKey": "off"
       },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
       "style": {
-        "noParameterAssign": "error",
+        "noParameterAssign": "off",
         "useAsConstAssertion": "error",
         "useDefaultParameterLast": "error",
         "useEnumInitializers": "error",
@@ -51,6 +46,11 @@
         "noInferrableTypes": "error",
         "noUselessElse": "error"
       }
+    }
+  },
+  "css": {
+    "linter": {
+      "enabled": false
     }
   },
   "javascript": {
