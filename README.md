@@ -62,7 +62,7 @@ cd v0.diy
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -70,9 +70,14 @@ npm install
    - Copy the contents from `.env.example`
    - Fill in your configuration values
 
-4. Start the development server:
+4. Generate the Prisma client:
 ```bash
-npm run dev
+npx prisma generate
+```
+
+5. Start the development server:
+```bash
+pnpm run dev
 ```
 
 Visit `http://localhost:3000` to start generating UI components!
