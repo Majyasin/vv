@@ -22,6 +22,119 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { type Theme, themes } from '@/lib/themes';
 
+const ThemeCard = ({
+  theme,
+  isCustom = false,
+  onThemeClick,
+  onThemeFork,
+  onThemeDelete,
+}: {
+  theme: Theme;
+  isCustom?: boolean;
+  onThemeClick: (themeId: string) => void;
+  onThemeFork: (
+    theme: Theme,
+    newId: string,
+    newName: string,
+    newDescription: string,
+  ) => void;
+  onThemeDelete?: (themeId: string, e: React.MouseEvent) => void;
+}) => (
+  <Card
+    key={theme.id}
+    onClick={() => onThemeClick(theme.id)}
+    className="group relative overflow-hidden cursor-pointer border border-border hover:border-primary/20 hover:shadow-md transition-all duration-200"
+  >
+    <CardHeader className="border-b border-border space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1.5">
+          <div className="flex items-center space-x-2">
+            <CardTitle className="text-base font-semibold text-foreground">
+              {theme.name}
+            </CardTitle>
+            {isCustom && (
+              <Badge variant="secondary" className="text-[10px] font-medium">
+                Custom
+              </Badge>
+            )}
+          </div>
+          <CardDescription className="text-xs text-muted-foreground line-clamp-2">
+            {theme.description}
+          </CardDescription>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <ForkThemeDialog
+              theme={theme}
+              onThemeFork={(newId, newName, newDescription) =>
+                onThemeFork(theme, newId, newName, newDescription)
+              }
+            />
+            {isCustom && onThemeDelete && (
+              <DropdownMenuItem
+                onClick={(e) => onThemeDelete(theme.id, e)}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Badge
+          variant="outline"
+          className="text-[10px] font-mono px-1.5 py-0 h-5 text-muted-foreground"
+        >
+          {theme.id}
+        </Badge>
+      </div>
+    </CardHeader>
+    <CardContent className="p-0">
+      <div className="flex h-2">
+        {Object.entries(theme.colors)
+          .filter(([key]) =>
+            ['background', 'foreground', 'primary', 'secondary'].includes(key),
+          )
+          .map(([key, value]) => (
+            <div
+              key={key}
+              className="flex-1"
+              style={{ backgroundColor: `hsl(${value})` }}
+            />
+          ))}
+      </div>
+      <div className="p-4 pt-3">
+        <div className="grid grid-cols-2 gap-2">
+          {Object.entries(theme.colors)
+            .filter(([key]) => ['primary', 'secondary'].includes(key))
+            .map(([key, value]) => (
+              <div key={key} className="flex items-center space-x-2">
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: `hsl(${value})` }}
+                />
+                <span className="text-xs text-muted-foreground capitalize">
+                  {key}
+                </span>
+              </div>
+            ))}
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
 export default function ThemeSelector() {
   const router = useRouter();
   const [customThemes, setCustomThemes] = useState<Theme[]>([]);
@@ -98,110 +211,6 @@ export default function ThemeSelector() {
     router.push(`/themes/${newId}`);
   };
 
-  const ThemeCard = ({
-    theme,
-    isCustom = false,
-  }: {
-    theme: Theme;
-    isCustom?: boolean;
-  }) => (
-    <Card
-      key={theme.id}
-      onClick={() => router.push(`/themes/${theme.id}`)}
-      className="group relative overflow-hidden cursor-pointer border border-border hover:border-primary/20 hover:shadow-md transition-all duration-200"
-    >
-      <CardHeader className="border-b border-border space-y-2">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1.5">
-            <div className="flex items-center space-x-2">
-              <CardTitle className="text-base font-semibold text-foreground">
-                {theme.name}
-              </CardTitle>
-              {isCustom && (
-                <Badge variant="secondary" className="text-[10px] font-medium">
-                  Custom
-                </Badge>
-              )}
-            </div>
-            <CardDescription className="text-xs text-muted-foreground line-clamp-2">
-              {theme.description}
-            </CardDescription>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <ForkThemeDialog
-                theme={theme}
-                onThemeFork={(newId, newName, newDescription) =>
-                  handleThemeFork(theme, newId, newName, newDescription)
-                }
-              />
-              {isCustom && (
-                <DropdownMenuItem
-                  onClick={(e) => handleThemeDelete(theme.id, e)}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Badge
-            variant="outline"
-            className="text-[10px] font-mono px-1.5 py-0 h-5 text-muted-foreground"
-          >
-            {theme.id}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="flex h-2">
-          {Object.entries(theme.colors)
-            .filter(([key]) =>
-              ['background', 'foreground', 'primary', 'secondary'].includes(
-                key,
-              ),
-            )
-            .map(([key, value]) => (
-              <div
-                key={key}
-                className="flex-1"
-                style={{ backgroundColor: `hsl(${value})` }}
-              />
-            ))}
-        </div>
-        <div className="p-4 pt-3">
-          <div className="grid grid-cols-2 gap-2">
-            {Object.entries(theme.colors)
-              .filter(([key]) => ['primary', 'secondary'].includes(key))
-              .map(([key, value]) => (
-                <div key={key} className="flex items-center space-x-2">
-                  <div
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: `hsl(${value})` }}
-                  />
-                  <span className="text-xs text-muted-foreground capitalize">
-                    {key}
-                  </span>
-                </div>
-              ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex justify-between items-center">
@@ -225,7 +234,12 @@ export default function ThemeSelector() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {themes.map((theme) => (
-              <ThemeCard key={theme.id} theme={theme} />
+              <ThemeCard
+                key={theme.id}
+                theme={theme}
+                onThemeClick={(themeId) => router.push(`/themes/${themeId}`)}
+                onThemeFork={handleThemeFork}
+              />
             ))}
           </div>
         </div>
@@ -244,7 +258,14 @@ export default function ThemeSelector() {
           {customThemes.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {customThemes.map((theme) => (
-                <ThemeCard key={theme.id} theme={theme} isCustom />
+                <ThemeCard
+                  key={theme.id}
+                  theme={theme}
+                  isCustom
+                  onThemeClick={(themeId) => router.push(`/themes/${themeId}`)}
+                  onThemeFork={handleThemeFork}
+                  onThemeDelete={handleThemeDelete}
+                />
               ))}
             </div>
           ) : (

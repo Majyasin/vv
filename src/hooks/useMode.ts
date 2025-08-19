@@ -26,15 +26,18 @@ export const useClientMode = () => {
   const { preciseMode, balancedMode, creativeMode, setMode } = useMode();
   const [hydrated, setHydrated] = useState(false);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setMode is stable
   useEffect(() => {
     setHydrated(true);
     const precise =
-      localStorage.getItem('preciseMode') === 'true' ||
-      localStorage.getItem('preciseMode') === null;
+      typeof window !== 'undefined' &&
+      localStorage.getItem('preciseMode') !== 'false';
     const balanced =
-      localStorage.getItem('balancedMode') === 'true' ||
-      localStorage.getItem('balancedMode') === null;
-    const creative = localStorage.getItem('creativeMode') === 'true';
+      typeof window !== 'undefined' &&
+      localStorage.getItem('balancedMode') === 'true';
+    const creative =
+      typeof window !== 'undefined' &&
+      localStorage.getItem('creativeMode') === 'true';
 
     setMode('preciseMode', precise);
     setMode('balancedMode', balanced);

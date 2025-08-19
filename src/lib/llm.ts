@@ -110,12 +110,12 @@ const glhf = createOpenAI({
 });
 
 const anthropicVertex = createAnthropicVertex({
-  projectId: process.env.ANTHROPIC_VERTEX_PROJECT,
-  region: process.env.ANTHROPIC_VERTEX_LOCATION,
+  projectId: process.env.GOOGLE_PROJECT_ID,
+  region: process.env.GOOGLE_REGION,
   headers: {
     'anthropic-beta': 'max-tokens-3-5-sonnet-2024-07-15',
   },
-  googleAuth: googleAuth,
+  googleAuth: googleAuth as any, // Type assertion to fix compatibility issue
 });
 
 const modelRegistry = createProviderRegistry({
@@ -143,4 +143,5 @@ const modelRegistry = createProviderRegistry({
   ollama: ollama,
 });
 
-export const llm = (modelId: string) => modelRegistry.languageModel(modelId);
+export const llm = (modelId: string) =>
+  modelRegistry.languageModel(modelId as any);

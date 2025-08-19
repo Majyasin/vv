@@ -178,6 +178,7 @@ const CarouselItem = React.forwardRef<
   const { orientation } = useCarousel();
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Using div with role=group for carousel functionality
     <div
       ref={ref}
       role="group"

@@ -34,6 +34,18 @@ type SubPrompt = {
   code?: string;
 };
 
+const getIdxFromMode = (mode: string) => {
+  if (mode === 'precise') {
+    return 0;
+  }
+  if (mode === 'balanced') {
+    return 1;
+  }
+  if (mode === 'creative') {
+    return 2;
+  }
+};
+
 const UI = (props: { params: Promise<any> }) => {
   const params = use(props.params);
   const ref = useRef<ImperativePanelGroupHandle>(null);
@@ -210,7 +222,7 @@ const UI = (props: { params: Promise<any> }) => {
 
         const subPrompts = fetchedUI.subPrompts || [];
 
-        if (!subPrompts.find((sp) => sp.SUBId.startsWith('a-0'))) {
+        if (!subPrompts.find((sp: SubPrompt) => sp.SUBId.startsWith('a-0'))) {
           const filterfetchedUI = {
             ...fetchedUI,
             subPrompts: [],
@@ -229,13 +241,13 @@ const UI = (props: { params: Promise<any> }) => {
 
         const subPromptMap: { [key: string]: SubPrompt } = {
           'a-0':
-            subPrompts.find((sp) => sp.SUBId.startsWith('a-0')) ||
+            subPrompts.find((sp: SubPrompt) => sp.SUBId.startsWith('a-0')) ||
             ({} as SubPrompt),
           'b-0':
-            subPrompts.find((sp) => sp.SUBId.startsWith('b-0')) ||
+            subPrompts.find((sp: SubPrompt) => sp.SUBId.startsWith('b-0')) ||
             ({} as SubPrompt),
           'c-0':
-            subPrompts.find((sp) => sp.SUBId.startsWith('c-0')) ||
+            subPrompts.find((sp: SubPrompt) => sp.SUBId.startsWith('c-0')) ||
             ({} as SubPrompt),
         };
 
@@ -283,21 +295,21 @@ const UI = (props: { params: Promise<any> }) => {
         ];
 
         const remainingSubPrompts = subPrompts.filter(
-          (subPromptObj) =>
+          (subPromptObj: SubPrompt) =>
             !['a-0', 'b-0', 'c-0'].some((prefix) =>
               subPromptObj.SUBId.startsWith(prefix),
             ),
         );
 
         const sortedRemainingSubPrompts = remainingSubPrompts.sort(
-          (a, b) =>
+          (a: SubPrompt, b: SubPrompt) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
 
         const combinedSubPrompts = [
           ...groupedSubPrompts,
           ...sortedRemainingSubPrompts.map(
-            (subPrompt) =>
+            (subPrompt: SubPrompt) =>
               [
                 {
                   ...subPrompt,
@@ -349,8 +361,9 @@ const UI = (props: { params: Promise<any> }) => {
       });
     };
     incView();
-  }, []);
+  }, [uiid]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setVersion is stable
   useEffect(() => {
     if (backendCheck === 0) return;
     if (ui?.subPrompts.length === 0) {
@@ -370,8 +383,16 @@ const UI = (props: { params: Promise<any> }) => {
     if (input !== '') {
       setPrompt(input);
     }
-  }, [backendCheck]);
+  }, [
+    backendCheck,
+    ui?.subPrompts,
+    ui?.prompt,
+    ui?.createdAt,
+    initialModel,
+    input,
+  ]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: generateCode and setInput are stable
   useEffect(() => {
     if (input !== '' && prompt !== '') {
       setInput('');
@@ -381,8 +402,9 @@ const UI = (props: { params: Promise<any> }) => {
         generateCode();
       }
     }
-  }, [input, prompt]);
+  }, [input, prompt, imageBase64]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: generateCode is stable
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && !loading) {
@@ -395,31 +417,13 @@ const UI = (props: { params: Promise<any> }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if (!uiState[mode].loading) {
       setCode(uiState[mode].code);
     }
-  }, [
-    mode,
-    uiState,
-    uiState.balanced.loading,
-    uiState.creative.loading,
-    uiState.precise.loading,
-  ]);
-
-  const getIdxFromMode = (mode: string) => {
-    if (mode === 'precise') {
-      return 0;
-    }
-    if (mode === 'balanced') {
-      return 1;
-    }
-    if (mode === 'creative') {
-      return 2;
-    }
-  };
+  }, [mode, uiState]);
 
   useEffect(() => {
     if (['precise', 'balanced', 'creative'].includes(mode)) {
@@ -448,7 +452,7 @@ const UI = (props: { params: Promise<any> }) => {
         createdAt: selectedSubPrompt[index].createdAt?.toLocaleString(),
       });
     }
-  }, [mode]);
+  }, [mode, uiState, ui?.subPrompts, selectedVersion.subid]);
 
   const setPanelView = (view: string) => {
     const panel = ref.current;

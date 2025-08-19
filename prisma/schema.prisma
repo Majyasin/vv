@@ -31,7 +31,7 @@ model User {
 
 model Account {
   id                String     @id @default(uuid())
-  userId            String     
+  userId            String
   type              String
   provider          String
   providerAccountId String
@@ -53,7 +53,7 @@ model Account {
 model Session {
   id                String     @id @default(uuid())
   sessionToken      String     @unique
-  userId            String     
+  userId            String
   expires           DateTime
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
@@ -77,8 +77,8 @@ model UI {
   prompt            String
   img               String
   createdAt         DateTime   @default(now())
-  updatedAt         DateTime   
-  uiType            String    
+  updatedAt         DateTime
+  uiType            String
   likesCount        Int        @default(0)
   viewCount         Int        @default(0)
   subPrompts        SubPrompt[]
@@ -90,12 +90,12 @@ model UI {
 
 model SubPrompt {
   id               String     @id @default(uuid())
-  UIId             String     
+  UIId             String
   SUBId            String     @unique
   createdAt        DateTime   @default(now())
   subPrompt        String
   modelId          String?
-  codeId           String     
+  codeId           String
 
   code             Code       @relation(fields: [codeId], references: [id], onDelete: Cascade)
   UI               UI         @relation(fields: [UIId], references: [id], onDelete: Cascade)
@@ -110,7 +110,7 @@ model Code {
 model Like {
   id               String     @id @default(uuid())
   userId           String
-  UIId             String     
+  UIId             String
   createdAt        DateTime   @default(now())
 
   ui               UI         @relation(fields: [UIId], references: [id], onDelete: Cascade)
@@ -123,7 +123,7 @@ model BugReport {
   reportType       String
   severity         String
   steps            String?
-  userId           String     
+  userId           String
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 

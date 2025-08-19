@@ -12,7 +12,7 @@ export const useModelInitialization = () => {
 
   useEffect(() => {
     const cv = 3;
-    const lv = Number.parseInt(localStorage.getItem('cv') || '0');
+    const lv = Number.parseInt(localStorage.getItem('cv') || '0', 10);
     if (lv < cv) {
       toast.info(
         'Changing default models to recommended models for better performance.',

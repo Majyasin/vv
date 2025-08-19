@@ -104,14 +104,32 @@ const ChartTooltip = RechartsPrimitive.Tooltip;
 
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-    React.ComponentProps<'div'> & {
-      hideLabel?: boolean;
-      hideIndicator?: boolean;
-      indicator?: 'line' | 'dot' | 'dashed';
-      nameKey?: string;
-      labelKey?: string;
-    }
+  {
+    active?: boolean;
+    payload?: Array<{
+      color?: string;
+      dataKey?: string;
+      name?: string;
+      value?: any;
+      payload?: any;
+    }>;
+    label?: string;
+    className?: string;
+    indicator?: 'line' | 'dot' | 'dashed';
+    hideLabel?: boolean;
+    hideIndicator?: boolean;
+    labelFormatter?: (value: any, payload: any[]) => React.ReactNode;
+    formatter?: (
+      value: any,
+      name: string,
+      item: any,
+      index: number,
+    ) => React.ReactNode;
+    color?: string;
+    nameKey?: string;
+    labelKey?: string;
+    labelClassName?: string;
+  }
 >(
   (
     {
@@ -199,7 +217,7 @@ const ChartTooltipContent = React.forwardRef<
                 )}
               >
                 {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
+                  formatter(item.value, item.name, item, index)
                 ) : (
                   <>
                     {itemConfig?.icon ? (
@@ -260,11 +278,17 @@ const ChartLegend = RechartsPrimitive.Legend;
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<'div'> &
-    Pick<RechartsPrimitive.LegendProps, 'payload' | 'verticalAlign'> & {
-      hideIcon?: boolean;
-      nameKey?: string;
-    }
+  React.ComponentProps<'div'> & {
+    payload?: Array<{
+      value?: string;
+      type?: string;
+      color?: string;
+      dataKey?: string;
+    }>;
+    verticalAlign?: 'top' | 'middle' | 'bottom';
+    hideIcon?: boolean;
+    nameKey?: string;
+  }
 >(
   (
     { className, hideIcon = false, payload, verticalAlign = 'bottom', nameKey },
@@ -285,31 +309,38 @@ const ChartLegendContent = React.forwardRef<
           className,
         )}
       >
-        {payload.map((item) => {
-          const key = `${nameKey || item.dataKey || 'value'}`;
-          const itemConfig = getPayloadConfigFromPayload(config, item, key);
+        {payload.map(
+          (item: {
+            value?: string;
+            type?: string;
+            color?: string;
+            dataKey?: string;
+          }) => {
+            const key = `${nameKey || item.dataKey || 'value'}`;
+            const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
-          return (
-            <div
-              key={item.value}
-              className={cn(
-                'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground',
-              )}
-            >
-              {itemConfig?.icon && !hideIcon ? (
-                <itemConfig.icon />
-              ) : (
-                <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
-                />
-              )}
-              {itemConfig?.label}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={item.value}
+                className={cn(
+                  'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground',
+                )}
+              >
+                {itemConfig?.icon && !hideIcon ? (
+                  <itemConfig.icon />
+                ) : (
+                  <div
+                    className="h-2 w-2 shrink-0 rounded-[2px]"
+                    style={{
+                      backgroundColor: item.color,
+                    }}
+                  />
+                )}
+                {itemConfig?.label}
+              </div>
+            );
+          },
+        )}
       </div>
     );
   },

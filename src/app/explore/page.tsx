@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getUIs } from '@/actions/ui/get-uis';
 import { EmptyState } from '@/components/explore/empty-state';
 import ProjectCard from '@/components/project-card';
@@ -126,7 +126,7 @@ const ExplorePage = () => {
     maxReached: false,
   });
 
-  const fetchUIs = async () => {
+  const fetchUIs = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true }));
     const fetchedUIs = await getUIs(
       filters.mode,
@@ -141,11 +141,11 @@ const ExplorePage = () => {
       isLoading: false,
       maxReached: fetchedUIs.length === 0,
     }));
-  };
+  }, [filters.mode, filters.timeRange, state.start]);
 
   useEffect(() => {
     fetchUIs();
-  }, [filters.mode, filters.timeRange, state.start]);
+  }, [fetchUIs]);
 
   const resetAndUpdate = (key: keyof Filters) => (value: string) => {
     setState({

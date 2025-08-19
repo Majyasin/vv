@@ -57,6 +57,26 @@ const initialProperties: ColorProperty[] = [
   { name: 'Ring', color: '#1a1a1a' },
 ];
 
+const ColorInput = ({
+  property,
+  onColorChange,
+}: {
+  property: ColorProperty;
+  onColorChange: (name: string, color: string) => void;
+}) => (
+  <div className="flex items-center space-x-2">
+    <Input
+      className="!w-8 !h-8 !p-0 rounded-md border border-gray-300 cursor-pointer"
+      type="color"
+      value={property.color}
+      onChange={(e) => onColorChange(property.name, e.target.value)}
+    />
+    <Badge className="flex-grow text-center" variant="outline">
+      {property.color}
+    </Badge>
+  </div>
+);
+
 export default function ThemeCustomizer(props: {
   params: Promise<{ id: string }>;
 }) {
@@ -129,20 +149,6 @@ export default function ThemeCustomizer(props: {
     localStorage.setItem(`theme_${params.id}`, JSON.stringify(themeData));
     alert('Theme saved successfully!');
   };
-
-  const ColorInput = ({ property }: { property: ColorProperty }) => (
-    <div className="flex items-center space-x-2">
-      <Input
-        className="!w-8 !h-8 !p-0 rounded-md border border-gray-300 cursor-pointer"
-        type="color"
-        value={property.color}
-        onChange={(e) => handleColorChange(property.name, e.target.value)}
-      />
-      <Badge className="flex-grow text-center" variant="outline">
-        {property.color}
-      </Badge>
-    </div>
-  );
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -312,7 +318,10 @@ export default function ThemeCustomizer(props: {
                     <Label className="text-sm font-medium text-muted-foreground">
                       {property.name}
                     </Label>
-                    <ColorInput property={property} />
+                    <ColorInput
+                      property={property}
+                      onColorChange={handleColorChange}
+                    />
                     <div
                       className="h-2 rounded-full mt-2"
                       style={{ backgroundColor: property.color }}

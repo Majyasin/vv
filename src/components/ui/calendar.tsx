@@ -9,6 +9,21 @@ import { cn } from '@/lib/utils';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+const Chevron = ({
+  orientation,
+  ...props
+}: {
+  orientation?: 'left' | 'right' | 'up' | 'down';
+  className?: string;
+  size?: number;
+  disabled?: boolean;
+}) => {
+  if (orientation === 'left') {
+    return <ChevronLeftIcon className="h-4 w-4" {...props} />;
+  }
+  return <ChevronRightIcon className="h-4 w-4" {...props} />;
+};
+
 function Calendar({
   className,
   classNames,
@@ -60,12 +75,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Chevron: ({ orientation, ...props }) =>
-          orientation === 'left' ? (
-            <ChevronLeftIcon className="h-4 w-4" {...props} />
-          ) : (
-            <ChevronRightIcon className="h-4 w-4" {...props} />
-          ),
+        Chevron,
       }}
       {...props}
     />
