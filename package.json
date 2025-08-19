@@ -9,8 +9,9 @@
     "start": "next start",
     "lint": "biome check ./src",
     "lint:fix": "biome check --write .",
+    "lint:staged": "lint-staged",
     "prepare": "husky",
-    "lint:staged": "lint-staged"
+    "type-check": "tsc --noEmit"
   },
   "browserslist": "defaults",
   "license": "MIT",

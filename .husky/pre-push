@@ -1,0 +1,5 @@
+# Run full linting on entire codebase
+pnpm run lint
+
+# Run build to ensure everything compiles
+pnpm run build

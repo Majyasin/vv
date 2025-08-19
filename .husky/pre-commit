@@ -1,1 +1,5 @@
-npm run lint:staged
+# Run lint-staged for linting and formatting
+pnpm run lint:staged
+
+# Run TypeScript type checking
+pnpm run type-check
