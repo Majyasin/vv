@@ -1,29 +1,19 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  compress: true,
-  reactStrictMode: true,
-  experimental: {
-    optimizeCss: true,
-    cssChunking: true,
-    inlineCss: true,
-  },
-  poweredByHeader: false,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+    qualities: [25, 50, 75, 100],
+  },
+  webpack: (config, options) => {
+    if (options.nextRuntime === "edge") {
+      if (!config.resolve.conditionNames) {
+        config.resolve.conditionNames = ["require", "node"];
+      }
+      if (!config.resolve.conditionNames.includes("worker")) {
+        config.resolve.conditionNames.push("worker");
+      }
+    }
+    return config;
   },
 };
 

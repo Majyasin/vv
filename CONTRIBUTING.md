@@ -1,51 +1,25 @@
-# Contributing to v0.diy
+# Contributing Guide
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+Thank you for your interest in contributing to this project! We accept contributions via bug reports, feature requests and pull requests. We also have a roadmap outlined below.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+For simple fixes or small items on the roadmap below, feel free to submit a pull request. For anything more complex, please open an issue first to discuss the changes you want to make.
 
-## We Develop with Github
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
+## Running the repo
 
-## We Use [Github Flow](https://guides.github.com/introduction/flow/index.html), So All Code Changes Happen Through Pull Requests
-Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
+To run the repo locally, simply `npm install` to install dependencies and then `npm run dev` to run the app.
 
-1. Fork the repo and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+## Roadmap
 
-## Any contributions you make will be under the [Your License] Software License
-In short, when you submit code changes, your submissions are understood to be under the same [License](LICENSE) that covers the project. Feel free to contact the maintainers if that's a concern.
-
-## Report bugs using Github's [issues](https://github.com/SujalXplores/v0.diy/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/SujalXplores/v0.diy/issues/new); it's that easy!
-
-## Write bug reports with detail, background, and sample code
-
-**Great Bug Reports** tend to have:
-
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can.
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-## Use a Consistent Coding Style
-
-* 2 spaces for indentation rather than tabs
-* You can try running `npm run lint` for style unification
+- [ ] Add self-correcting to the app so it can fix its own errors
+- [ ] Compressing prompt: Use small model like llama 3.1 70B to retain what happened in the past, good memory management is key
+- [ ] Add evals with Braintrust to be able to measure how good the system is over time and when making new changes
+- [ ] Add more good examples to the shadcn-examples.ts file (single components that span a whole app and use shadcn)
+- [ ] Add dynamic OG images to the specific generations & include the prompt + a screenshot in the image
+- [ ] Show a "featured apps" section on /gallery (or have some at the bottom of the homepage as templates). Have a /id/${prompt} dynamic route that can display a bunch of nice example apps in the sandbox ready to go
+- [ ] Try finetuning a smaller model on good prompts from deepseek-v2 or o1/Claude
+- [ ] Add dark mode to the site overall, nice design change
+- [ ] Support more languages starting with Python (like streamlit) and see if I can run them on CSB SDK
 
 ## License
-By contributing, you agree that your contributions will be licensed under its [MIT License](LICENSE).
 
-## References
-This document was adapted from the open-source contribution guidelines for [Facebook's Draft](https://github.com/facebook/draft-js/blob/master/CONTRIBUTING.md)
+By contributing, you agree that your contributions will be licensed under the project's license.
