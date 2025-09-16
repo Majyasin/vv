@@ -21,7 +21,9 @@ export const Suggestions = ({
     const scrollArea = scrollAreaRef.current?.querySelector(
       '[data-radix-scroll-area-viewport]',
     ) as HTMLElement;
-    if (!scrollArea) return;
+    if (!scrollArea) {
+      return;
+    }
 
     const { scrollLeft, scrollWidth, clientWidth } = scrollArea;
     setCanScrollLeft(scrollLeft > 0);
@@ -32,7 +34,9 @@ export const Suggestions = ({
     const scrollArea = scrollAreaRef.current?.querySelector(
       '[data-radix-scroll-area-viewport]',
     ) as HTMLElement;
-    if (!scrollArea) return;
+    if (!scrollArea) {
+      return;
+    }
 
     // Check initial state
     checkScrollability();
@@ -48,18 +52,18 @@ export const Suggestions = ({
       scrollArea.removeEventListener('scroll', checkScrollability);
       resizeObserver.disconnect();
     };
-  }, [children]);
+  }, [checkScrollability]);
 
   return (
     <div className="relative">
       {/* Left fade overlay */}
       {canScrollLeft && (
-        <div className="absolute -left-px -top-px z-10 h-[calc(100%+1px)] w-12 bg-gradient-to-r from-gray-50 dark:from-black to-transparent pointer-events-none" />
+        <div className="-left-px -top-px pointer-events-none absolute z-10 h-[calc(100%+1px)] w-12 bg-gradient-to-r from-gray-50 to-transparent dark:from-black" />
       )}
 
       {/* Right fade overlay */}
       {canScrollRight && (
-        <div className="absolute -right-px -top-px z-10 h-[calc(100%+1px)] w-12 bg-gradient-to-l from-gray-50 dark:from-black to-transparent pointer-events-none" />
+        <div className="-right-px -top-px pointer-events-none absolute z-10 h-[calc(100%+1px)] w-12 bg-gradient-to-l from-gray-50 to-transparent dark:from-black" />
       )}
 
       <ScrollArea

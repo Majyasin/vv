@@ -32,7 +32,9 @@ export function ResizableLayout({
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!(isDragging && containerRef.current)) return;
+      if (!(isDragging && containerRef.current)) {
+        return;
+      }
 
       const containerRect = containerRef.current.getBoundingClientRect();
       const newLeftWidth =
@@ -78,7 +80,7 @@ export function ResizableLayout({
       {/* Resize Handle */}
       <div
         className={cn(
-          'w-px bg-border dark:bg-input cursor-col-resize transition-all relative group',
+          'group relative w-px cursor-col-resize bg-border transition-all dark:bg-input',
           isDragging && 'bg-blue-500 dark:bg-blue-400',
         )}
         onMouseDown={handleMouseDown}
@@ -86,17 +88,17 @@ export function ResizableLayout({
         {/* Blue highlight on hover - 3px wide */}
         <div
           className={cn(
-            'absolute inset-y-0 left-1/2 -translate-x-1/2 w-0 bg-blue-500 dark:bg-blue-400 transition-all duration-200',
+            '-translate-x-1/2 absolute inset-y-0 left-1/2 w-0 bg-blue-500 transition-all duration-200 dark:bg-blue-400',
             'group-hover:w-[3px]',
             isDragging && 'w-[3px]',
           )}
         />
         {/* Wider hit area for better UX */}
-        <div className="absolute inset-y-0 -left-2 -right-2" />
+        <div className="-left-2 -right-2 absolute inset-y-0" />
       </div>
 
       {/* Right Panel */}
-      <div className="flex-1 flex flex-col">{rightPanel}</div>
+      <div className="flex flex-1 flex-col">{rightPanel}</div>
     </div>
   );
 }

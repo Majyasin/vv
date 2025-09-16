@@ -42,7 +42,7 @@ export function AuthForm({ type }: AuthFormProps) {
       </div>
 
       {state?.type === 'error' && (
-        <div className="text-sm text-red-500">{state.message}</div>
+        <div className="text-red-500 text-sm">{state.message}</div>
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
@@ -55,7 +55,7 @@ export function AuthForm({ type }: AuthFormProps) {
             : 'Create Account'}
       </Button>
 
-      <div className="text-center text-sm text-muted-foreground">
+      <div className="text-center text-muted-foreground text-sm">
         {type === 'signin' ? (
           <>
             Don&apos;t have an account?{' '}

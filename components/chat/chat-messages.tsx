@@ -1,11 +1,11 @@
 import { StreamingMessage } from '@v0-sdk/react';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Conversation,
   ConversationContent,
 } from '@/components/ai-elements/conversation';
 import { Loader } from '@/components/ai-elements/loader';
-import { Message, MessageContent } from '@/components/ai-elements/message';
+import { Message } from '@/components/ai-elements/message';
 import { MessageRenderer } from '@/components/message-renderer';
 import { sharedComponents } from '@/components/shared-components';
 
@@ -61,45 +61,43 @@ export function ChatMessages({
   }
 
   return (
-    <>
-      <Conversation>
-        <ConversationContent>
-          {chatHistory.map((msg, index) => (
-            <Message from={msg.type} key={index}>
-              {msg.isStreaming && msg.stream ? (
-                <StreamingMessage
-                  stream={msg.stream}
-                  messageId={`msg-${index}`}
-                  role={msg.type}
-                  onComplete={onStreamingComplete}
-                  onChatData={onChatData}
-                  onChunk={(chunk) => {
-                    // Hide external loader once we start receiving content (only once)
-                    if (onStreamingStarted && !streamingStartedRef.current) {
-                      streamingStartedRef.current = true;
-                      onStreamingStarted();
-                    }
-                  }}
-                  onError={(error) => console.error('Streaming error:', error)}
-                  components={sharedComponents}
-                  showLoadingIndicator={false}
-                />
-              ) : (
-                <MessageRenderer
-                  content={msg.content}
-                  role={msg.type}
-                  messageId={`msg-${index}`}
-                />
-              )}
-            </Message>
-          ))}
-          {isLoading && (
-            <div className="flex justify-center py-4">
-              <Loader size={16} className="text-gray-500 dark:text-gray-400" />
-            </div>
-          )}
-        </ConversationContent>
-      </Conversation>
-    </>
+    <Conversation>
+      <ConversationContent>
+        {chatHistory.map((msg, index) => (
+          <Message from={msg.type} key={index}>
+            {msg.isStreaming && msg.stream ? (
+              <StreamingMessage
+                stream={msg.stream}
+                messageId={`msg-${index}`}
+                role={msg.type}
+                onComplete={onStreamingComplete}
+                onChatData={onChatData}
+                onChunk={(_chunk) => {
+                  // Hide external loader once we start receiving content (only once)
+                  if (onStreamingStarted && !streamingStartedRef.current) {
+                    streamingStartedRef.current = true;
+                    onStreamingStarted();
+                  }
+                }}
+                onError={(error) => console.error('Streaming error:', error)}
+                components={sharedComponents}
+                showLoadingIndicator={false}
+              />
+            ) : (
+              <MessageRenderer
+                content={msg.content}
+                role={msg.type}
+                messageId={`msg-${index}`}
+              />
+            )}
+          </Message>
+        ))}
+        {isLoading && (
+          <div className="flex justify-center py-4">
+            <Loader size={16} className="text-gray-500 dark:text-gray-400" />
+          </div>
+        )}
+      </ConversationContent>
+    </Conversation>
   );
 }

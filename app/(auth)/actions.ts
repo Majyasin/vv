@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { z } from 'zod';
 import { createUser, getUser } from '@/lib/db/queries';
-import { signIn, signOut } from './auth';
+import { signIn } from './auth';
 
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email.'),

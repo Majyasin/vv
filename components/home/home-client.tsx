@@ -69,7 +69,7 @@ export function HomeClient() {
   } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const router = useRouter();
+  const _router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { startHandoff } = useStreaming();
 
@@ -155,7 +155,9 @@ export function HomeClient() {
 
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!message.trim() || isLoading) return;
+    if (!message.trim() || isLoading) {
+      return;
+    }
 
     const userMessage = message.trim();
     const currentAttachments = [...attachments];
@@ -334,7 +336,9 @@ export function HomeClient() {
 
   const handleChatSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!message.trim() || isLoading || !currentChatId) return;
+    if (!message.trim() || isLoading || !currentChatId) {
+      return;
+    }
 
     const userMessage = message.trim();
     setMessage('');
@@ -416,7 +420,7 @@ export function HomeClient() {
 
   if (showChatInterface) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col">
+      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-black">
         {/* Handle search params with Suspense boundary */}
         <Suspense fallback={null}>
           <SearchParamsHandler onReset={handleReset} />
@@ -466,7 +470,6 @@ export function HomeClient() {
                   key={index}
                   stream={msg.stream}
                   messageId={`msg-${index}`}
-                  role="assistant"
                   onComplete={handleStreamingComplete}
                   onChatData={handleChatData}
                   onError={(error) => {
@@ -483,7 +486,7 @@ export function HomeClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col">
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-black">
       {/* Handle search params with Suspense boundary */}
       <Suspense fallback={null}>
         <SearchParamsHandler onReset={handleReset} />
@@ -492,19 +495,19 @@ export function HomeClient() {
       <AppHeader />
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl w-full">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+      <div className="flex flex-1 items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-4xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 font-bold text-4xl text-gray-900 dark:text-white">
               What can we build together?
             </h2>
           </div>
 
           {/* Prompt Input */}
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <PromptInput
               onSubmit={handleSendMessage}
-              className="w-full relative"
+              className="relative w-full"
               onImageDrop={handleImageFiles}
               isDragOver={isDragOver}
               onDragOver={handleDragOver}
@@ -552,7 +555,7 @@ export function HomeClient() {
           </div>
 
           {/* Suggestions */}
-          <div className="mt-4 max-w-2xl mx-auto">
+          <div className="mx-auto mt-4 max-w-2xl">
             <Suggestions>
               <Suggestion
                 onClick={() => {
@@ -662,7 +665,7 @@ export function HomeClient() {
           </div>
 
           {/* Footer */}
-          <div className="mt-16 text-center text-sm text-muted-foreground">
+          <div className="mt-16 text-center text-muted-foreground text-sm">
             <p>
               Powered by{' '}
               <Link

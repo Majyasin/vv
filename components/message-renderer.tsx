@@ -1,18 +1,21 @@
 import { Message, type MessageBinaryFormat } from '@v0-sdk/react';
-import React from 'react';
 import { sharedComponents } from './shared-components';
 
 // Function to preprocess message content and remove V0_FILE markers and shell placeholders
 function preprocessMessageContent(
   content: MessageBinaryFormat,
 ): MessageBinaryFormat {
-  if (!Array.isArray(content)) return content;
+  if (!Array.isArray(content)) {
+    return content;
+  }
 
   return content.map((row) => {
-    if (!Array.isArray(row)) return row;
+    if (!Array.isArray(row)) {
+      return row;
+    }
 
     // Process text content to remove V0_FILE markers and shell placeholders
-    return row.map((item, index) => {
+    return row.map((item, _index) => {
       if (typeof item === 'string') {
         // Remove V0_FILE markers with various patterns
         let processed = item.replace(/\[V0_FILE\][^:]*:file="[^"]*"\n?/g, '');
@@ -57,7 +60,7 @@ export function MessageRenderer({
   if (typeof content === 'string') {
     return (
       <div className={className}>
-        <p className="mb-4 text-gray-700 dark:text-gray-200 leading-relaxed">
+        <p className="mb-4 text-gray-700 leading-relaxed dark:text-gray-200">
           {content}
         </p>
       </div>

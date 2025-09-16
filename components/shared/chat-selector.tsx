@@ -93,7 +93,7 @@ export function ChatSelector() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [chats, setChats] = useState<Chat[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
@@ -114,7 +114,9 @@ export function ChatSelector() {
 
   // Fetch user's chats
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id) {
+      return;
+    }
 
     const fetchChats = async () => {
       setIsLoading(true);
@@ -139,7 +141,9 @@ export function ChatSelector() {
   };
 
   const handleRenameChat = async () => {
-    if (!(renameChatName.trim() && currentChatId)) return;
+    if (!(renameChatName.trim() && currentChatId)) {
+      return;
+    }
 
     setIsRenamingChat(true);
     try {
@@ -177,7 +181,9 @@ export function ChatSelector() {
   };
 
   const handleDeleteChat = async () => {
-    if (!currentChatId) return;
+    if (!currentChatId) {
+      return;
+    }
 
     setIsDeletingChat(true);
     try {
@@ -203,7 +209,9 @@ export function ChatSelector() {
   };
 
   const handleDuplicateChat = async () => {
-    if (!currentChatId) return;
+    if (!currentChatId) {
+      return;
+    }
 
     setIsDuplicatingChat(true);
     try {
@@ -232,7 +240,9 @@ export function ChatSelector() {
   };
 
   const handleChangeVisibility = async () => {
-    if (!currentChatId) return;
+    if (!currentChatId) {
+      return;
+    }
 
     setIsChangingVisibility(true);
     try {
@@ -267,7 +277,9 @@ export function ChatSelector() {
   };
 
   // Don't show if user is not authenticated
-  if (!session?.user?.id) return null;
+  if (!session?.user?.id) {
+    return null;
+  }
 
   const currentChat = currentChatId
     ? chats.find((c) => c.id === currentChatId)
@@ -303,7 +315,7 @@ export function ChatSelector() {
                 </SelectItem>
               ))
             ) : (
-              <div className="px-2 py-1.5 text-sm text-muted-foreground">
+              <div className="px-2 py-1.5 text-muted-foreground text-sm">
                 No chats yet
               </div>
             )}
@@ -536,7 +548,7 @@ export function ChatSelector() {
                     <EyeOff className="h-4 w-4" />
                     <div>
                       <div>Private</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         Only you can see this chat
                       </div>
                     </div>
@@ -547,7 +559,7 @@ export function ChatSelector() {
                     <Eye className="h-4 w-4" />
                     <div>
                       <div>Public</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         Anyone can see this chat
                       </div>
                     </div>
@@ -558,7 +570,7 @@ export function ChatSelector() {
                     <Users className="h-4 w-4" />
                     <div>
                       <div>Team</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         Team members can see this chat
                       </div>
                     </div>
@@ -569,7 +581,7 @@ export function ChatSelector() {
                     <Users className="h-4 w-4" />
                     <div>
                       <div>Team Edit</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         Team members can see and edit this chat
                       </div>
                     </div>
@@ -580,7 +592,7 @@ export function ChatSelector() {
                     <Lock className="h-4 w-4" />
                     <div>
                       <div>Unlisted</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         Only people with the link can see this chat
                       </div>
                     </div>

@@ -1,6 +1,5 @@
 import {
   CodeBlock,
-  CodeProjectPart,
   type CodeProjectPartProps,
   MathPart,
   type TaskSectionProps,
@@ -38,7 +37,7 @@ export const ThinkingSectionWrapper = ({
     <Reasoning
       duration={duration ? Math.round(duration) : duration}
       defaultOpen={!collapsed}
-      onOpenChange={(open) => onCollapse?.()}
+      onOpenChange={(_open) => onCollapse?.()}
       {...props}
     >
       <ReasoningTrigger title={title || 'Thinking'} />
@@ -68,9 +67,9 @@ export const TaskSectionWrapper = ({
 }: TaskSectionProps) => {
   return (
     <Task
-      className="w-full mb-4"
+      className="mb-4 w-full"
       defaultOpen={!collapsed}
-      onOpenChange={(open) => onCollapse?.()}
+      onOpenChange={(_open) => onCollapse?.()}
     >
       <TaskTrigger title={title || type || 'Task'} />
       <TaskContent>
@@ -158,7 +157,7 @@ export const TaskSectionWrapper = ({
               if (partObj.type === 'finished-web-search' && partObj.answer) {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                    <div className="text-gray-700 text-sm leading-relaxed dark:text-gray-300">
                       {partObj.answer}
                     </div>
                   </TaskItem>
@@ -181,7 +180,7 @@ export const TaskSectionWrapper = ({
                 return (
                   <TaskItem key={index}>
                     <div className="space-y-2">
-                      <div className="text-gray-700 dark:text-gray-300 text-sm">
+                      <div className="text-gray-700 text-sm dark:text-gray-300">
                         Generated {partObj.inspirations.length} design
                         inspirations
                       </div>
@@ -190,7 +189,7 @@ export const TaskSectionWrapper = ({
                         .map((inspiration: any, i: number) => (
                           <div
                             key={i}
-                            className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 p-2 rounded"
+                            className="rounded bg-gray-100 p-2 text-gray-600 text-xs dark:bg-gray-800 dark:text-gray-400"
                           >
                             {inspiration.title ||
                               inspiration.description ||
@@ -215,7 +214,7 @@ export const TaskSectionWrapper = ({
               ) {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-700 dark:text-gray-300 text-sm">
+                    <div className="text-gray-700 text-sm dark:text-gray-300">
                       Analyzed {partObj.requirements.length || 'several'}{' '}
                       requirements
                     </div>
@@ -227,7 +226,7 @@ export const TaskSectionWrapper = ({
               if (partObj.type === 'thinking' || partObj.type === 'analyzing') {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-600 dark:text-gray-400 text-sm italic">
+                    <div className="text-gray-600 text-sm italic dark:text-gray-400">
                       Thinking...
                     </div>
                   </TaskItem>
@@ -237,7 +236,7 @@ export const TaskSectionWrapper = ({
               if (partObj.type === 'processing' || partObj.type === 'working') {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-600 dark:text-gray-400 text-sm">
+                    <div className="text-gray-600 text-sm dark:text-gray-400">
                       Processing...
                     </div>
                   </TaskItem>
@@ -247,7 +246,7 @@ export const TaskSectionWrapper = ({
               if (partObj.type === 'complete' || partObj.type === 'finished') {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-green-600 dark:text-green-400 text-sm">
+                    <div className="text-green-600 text-sm dark:text-green-400">
                       ✓ Complete
                     </div>
                   </TaskItem>
@@ -258,7 +257,7 @@ export const TaskSectionWrapper = ({
               if (partObj.type === 'error' || partObj.type === 'failed') {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-red-600 dark:text-red-400 text-sm">
+                    <div className="text-red-600 text-sm dark:text-red-400">
                       ✗ {partObj.error || partObj.message || 'Task failed'}
                     </div>
                   </TaskItem>
@@ -275,7 +274,7 @@ export const TaskSectionWrapper = ({
               if (message) {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-700 dark:text-gray-300 text-sm">
+                    <div className="text-gray-700 text-sm dark:text-gray-300">
                       {message}
                     </div>
                   </TaskItem>
@@ -285,7 +284,7 @@ export const TaskSectionWrapper = ({
               if (status) {
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-600 dark:text-gray-400 text-sm capitalize">
+                    <div className="text-gray-600 text-sm capitalize dark:text-gray-400">
                       {status.replace(/-/g, ' ')}...
                     </div>
                   </TaskItem>
@@ -302,7 +301,7 @@ export const TaskSectionWrapper = ({
 
                 return (
                   <TaskItem key={index}>
-                    <div className="text-gray-600 dark:text-gray-400 text-sm">
+                    <div className="text-gray-600 text-sm dark:text-gray-400">
                       {readableType}
                     </div>
                   </TaskItem>
@@ -313,10 +312,10 @@ export const TaskSectionWrapper = ({
               return (
                 <TaskItem key={index}>
                   <details className="text-xs">
-                    <summary className="text-gray-500 dark:text-gray-400 cursor-pointer">
+                    <summary className="cursor-pointer text-gray-500 dark:text-gray-400">
                       Unknown task part (click to expand)
                     </summary>
-                    <div className="font-mono mt-2 bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                    <div className="mt-2 rounded bg-gray-100 p-2 font-mono dark:bg-gray-800">
                       {JSON.stringify(part, null, 2)}
                     </div>
                   </details>
@@ -349,17 +348,17 @@ export const CodeProjectPartWrapper = ({
 
   return (
     <div
-      className={`my-6 border border-border dark:border-input rounded-lg ${className || ''}`}
+      className={`my-6 rounded-lg border border-border dark:border-input ${className || ''}`}
       {...props}
     >
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
       >
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 flex items-center justify-center">
+          <div className="flex h-6 w-6 items-center justify-center">
             <svg
-              className="w-5 h-5 text-black dark:text-white"
+              className="h-5 w-5 text-black dark:text-white"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -371,11 +370,11 @@ export const CodeProjectPartWrapper = ({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+          <span className="font-mono text-gray-500 text-sm dark:text-gray-400">
             v1
           </span>
           <svg
-            className={`w-4 h-4 text-gray-400 transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
+            className={`h-4 w-4 text-gray-400 transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -389,13 +388,13 @@ export const CodeProjectPartWrapper = ({
       </button>
 
       {!isCollapsed && (
-        <div className="border-t border-border dark:border-input">
+        <div className="border-border border-t dark:border-input">
           {children || (
             <div className="p-4">
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-sm text-black dark:text-white">
+              <div className="mb-4 space-y-2">
+                <div className="flex items-center gap-2 text-black text-sm dark:text-white">
                   <svg
-                    className="w-4 h-4"
+                    className="h-4 w-4"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -423,8 +422,7 @@ export const CodeProjectPartWrapper = ({
 const CustomTaskSectionWrapper = (props: any) => {
   // If this task contains code project parts, render as CodeProjectPart instead
   if (
-    props.parts &&
-    props.parts.some(
+    props.parts?.some(
       (part: any) =>
         part && typeof part === 'object' && part.type === 'code-project',
     )
@@ -452,10 +450,10 @@ const CustomTaskSectionWrapper = (props: any) => {
                     (file: any, index: number) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2 text-sm text-black dark:text-white"
+                        className="flex items-center gap-2 text-black text-sm dark:text-white"
                       >
                         <svg
-                          className="w-4 h-4"
+                          className="h-4 w-4"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -492,11 +490,7 @@ const CustomTaskSectionWrapper = (props: any) => {
   }
 
   // Handle other potential new task types
-  if (
-    props.type &&
-    props.type.startsWith('task-') &&
-    props.type.endsWith('-v1')
-  ) {
+  if (props.type?.startsWith('task-') && props.type.endsWith('-v1')) {
     // Extract a readable title from the task type
     const taskName = props.type
       .replace('task-', '')

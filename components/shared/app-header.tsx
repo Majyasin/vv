@@ -52,18 +52,18 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
   };
 
   return (
-    <div className={`border-b border-border dark:border-input ${className}`}>
+    <div className={`border-border border-b dark:border-input ${className}`}>
       <Suspense fallback={null}>
         <SearchParamsHandler />
       </Suspense>
 
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
               href="/"
               onClick={handleLogoClick}
-              className="text-lg font-semibold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+              className="font-semibold text-gray-900 text-lg hover:text-gray-700 dark:text-white dark:hover:text-gray-300"
             >
               v0.diy
             </Link>
@@ -73,7 +73,7 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
-              className="py-1.5 px-2 h-fit text-sm"
+              className="h-fit px-2 py-1.5 text-sm"
               asChild
             >
               <Link

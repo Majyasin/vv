@@ -1,30 +1,17 @@
 import 'server-only';
 
-import {
-  and,
-  asc,
-  count,
-  desc,
-  eq,
-  gt,
-  gte,
-  inArray,
-  lt,
-  type SQL,
-} from 'drizzle-orm';
+import { and, count, desc, eq, gte } from 'drizzle-orm';
 import { generateUUID } from '../utils';
 import db from './connection';
 import {
-  type AnonymousChatLog,
   anonymous_chat_logs,
-  type ChatOwnership,
   chat_ownerships,
   type User,
   users,
 } from './schema';
 import { generateHashedPassword } from './utils';
 
-export async function getUser(email: string): Promise<Array<User>> {
+export async function getUser(email: string): Promise<User[]> {
   try {
     return await db.select().from(users).where(eq(users.email, email));
   } catch (error) {

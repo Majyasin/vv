@@ -45,7 +45,9 @@ export function ChatInput({
 
   const handleImageFiles = useCallback(
     async (files: File[]) => {
-      if (!onAttachmentsChange) return;
+      if (!onAttachmentsChange) {
+        return;
+      }
 
       try {
         const newAttachments = await Promise.all(
@@ -61,7 +63,9 @@ export function ChatInput({
 
   const handleRemoveAttachment = useCallback(
     (id: string) => {
-      if (!onAttachmentsChange) return;
+      if (!onAttachmentsChange) {
+        return;
+      }
       onAttachmentsChange(attachments.filter((att) => att.id !== id));
     },
     [attachments, onAttachmentsChange],
@@ -121,7 +125,7 @@ export function ChatInput({
       <div className="flex gap-2">
         <PromptInput
           onSubmit={handleSubmit}
-          className="w-full max-w-2xl mx-auto relative"
+          className="relative mx-auto w-full max-w-2xl"
           onImageDrop={handleImageFiles}
           isDragOver={isDragOver}
           onDragOver={handleDragOver}
@@ -161,7 +165,7 @@ export function ChatInput({
         </PromptInput>
       </div>
       {showSuggestions && (
-        <div className="max-w-2xl mx-auto mt-2">
+        <div className="mx-auto mt-2 max-w-2xl">
           <Suggestions>
             <Suggestion
               onClick={() => {

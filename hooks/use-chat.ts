@@ -96,7 +96,9 @@ export function useChat(chatId: string) {
     attachments?: Array<{ url: string }>,
   ) => {
     e.preventDefault();
-    if (!message.trim() || isLoading || !chatId) return;
+    if (!message.trim() || isLoading || !chatId) {
+      return;
+    }
 
     const userMessage = message.trim();
     setMessage('');

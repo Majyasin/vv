@@ -443,7 +443,7 @@ export const PromptInputMicButton = ({
       if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
-        } catch (error) {
+        } catch (_error) {
           // Ignore errors during cleanup
         }
       }
@@ -451,7 +451,9 @@ export const PromptInputMicButton = ({
   }, [onTranscript, onError]);
 
   const toggleListening = useCallback(() => {
-    if (!recognitionRef.current || isCleaningUpRef.current) return;
+    if (!recognitionRef.current || isCleaningUpRef.current) {
+      return;
+    }
 
     if (isListening) {
       try {
@@ -566,30 +568,32 @@ export const PromptInputImagePreview = ({
   onRemove,
   className,
 }: PromptInputImagePreviewProps) => {
-  if (attachments.length === 0) return null;
+  if (attachments.length === 0) {
+    return null;
+  }
 
   return (
     <div className={cn('flex flex-wrap gap-2 p-2', className)}>
       {attachments.map((attachment) => (
         <div
           key={attachment.id}
-          className="relative group rounded-lg overflow-hidden border bg-muted"
+          className="group relative overflow-hidden rounded-lg border bg-muted"
         >
           <img
             src={attachment.preview}
             alt={attachment.file.name}
-            className="w-16 h-16 object-cover"
+            className="h-16 w-16 object-cover"
           />
           {onRemove && (
             <button
               onClick={() => onRemove(attachment.id)}
-              className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="-top-1 -right-1 absolute flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100"
               type="button"
             >
               <XIcon className="size-3" />
             </button>
           )}
-          <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate">
+          <div className="absolute right-0 bottom-0 left-0 truncate bg-black/50 p-1 text-white text-xs">
             {attachment.file.name}
           </div>
         </div>

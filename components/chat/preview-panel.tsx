@@ -32,7 +32,7 @@ export function PreviewPanel({
   return (
     <div
       className={cn(
-        'flex flex-col h-full transition-all duration-300',
+        'flex h-full flex-col transition-all duration-300',
         isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-black' : 'flex-1',
       )}
     >
@@ -74,12 +74,12 @@ export function PreviewPanel({
         {currentChat?.demo ? (
           <WebPreviewBody key={refreshKey} src={currentChat.demo} />
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-black">
+          <div className="flex flex-1 items-center justify-center bg-gray-50 dark:bg-black">
             <div className="text-center text-border dark:text-input">
               <div className="mb-2">
-                <Monitor className="mx-auto h-12 w-12 text-border dark:text-input stroke-border dark:stroke-input" />
+                <Monitor className="mx-auto h-12 w-12 stroke-border text-border dark:stroke-input dark:text-input" />
               </div>
-              <p className="text-sm font-medium">No preview available</p>
+              <p className="font-medium text-sm">No preview available</p>
               <p className="text-xs">
                 Start a conversation to see your app here
               </p>

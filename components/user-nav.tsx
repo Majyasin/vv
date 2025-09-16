@@ -39,11 +39,11 @@ export function UserNav({ session }: UserNavProps) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
+            <p className="font-medium text-sm leading-none">
               {isSignedOut ? 'Not signed in' : isGuest ? 'Guest User' : 'User'}
             </p>
             {session?.user?.email && (
-              <p className="text-xs leading-none text-muted-foreground">
+              <p className="text-muted-foreground text-xs leading-none">
                 {session.user.email}
               </p>
             )}
