@@ -43,6 +43,7 @@
     "drizzle-kit": "0.31.4",
     "drizzle-orm": "0.44.5",
     "embla-carousel-react": "8.6.0",
+    "geist": "1.5.1",
     "lucide-react": "0.544.0",
     "nanoid": "5.1.5",
     "next": "15.5.3",
