@@ -1,20 +1,19 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  images: {
-    qualities: [25, 50, 75, 100],
+  compress: true,
+  reactStrictMode: true,
+  experimental: {
+    reactCompiler: true,
+    optimizeCss: true,
+    cssChunking: true,
+    inlineCss: true,
   },
-  webpack: (config, options) => {
-    if (options.nextRuntime === "edge") {
-      if (!config.resolve.conditionNames) {
-        config.resolve.conditionNames = ["require", "node"];
-      }
-      if (!config.resolve.conditionNames.includes("worker")) {
-        config.resolve.conditionNames.push("worker");
-      }
-    }
-    return config;
+  typedRoutes: true,
+  poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

@@ -1,49 +1,66 @@
-import type { Metadata } from "next";
-import PlausibleProvider from "next-plausible";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
+import { StreamingProvider } from '@/contexts/streaming-context'
+import { SWRProvider } from '@/components/providers/swr-provider'
+import { SessionProvider } from '@/components/providers/session-provider'
 
-let title = "v0.diy - AI Code Generator";
-let description = "Generate your next app with AI. Build ideas instantly.";
-let url = "https://v0diy.vercel.app/";
-let ogimage = "https://v0diy.vercel.app/og-image.png";
-let sitename = "v0diy.vercel.app";
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
-  metadataBase: new URL(url),
-  title,
-  description,
-  icons: {
-    icon: "/favicon.ico",
-  },
-  openGraph: {
-    images: [ogimage],
-    title,
-    description,
-    url: url,
-    siteName: sitename,
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: [ogimage],
-    title,
-    description,
-  },
-};
+  title: 'v0 Clone',
+  description:
+    'A clone of v0.dev built with the v0 SDK - Generate and preview React components with AI',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <PlausibleProvider domain="v0diy.vercel.app" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+                
+                // Listen for changes in system preference
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                  if (e.matches) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                });
+              })();
+            `,
+          }}
+        />
       </head>
-
-      {children}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <SessionProvider>
+          <SWRProvider>
+            <StreamingProvider>{children}</StreamingProvider>
+          </SWRProvider>
+        </SessionProvider>
+      </body>
     </html>
-  );
+  )
 }
