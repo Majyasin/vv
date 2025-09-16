@@ -348,7 +348,9 @@ export const CodeProjectPartWrapper = ({
 
   return (
     <div
-      className={`my-6 rounded-lg border border-border dark:border-input ${className || ''}`}
+      className={`my-6 rounded-lg border border-border dark:border-input ${
+        className || ''
+      }`}
       {...props}
     >
       <button
@@ -362,6 +364,7 @@ export const CodeProjectPartWrapper = ({
               fill="currentColor"
               viewBox="0 0 20 20"
             >
+              <title>Folder icon</title>
               <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
             </svg>
           </div>
@@ -374,10 +377,13 @@ export const CodeProjectPartWrapper = ({
             v1
           </span>
           <svg
-            className={`h-4 w-4 text-gray-400 transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
+            className={`h-4 w-4 text-gray-400 transition-transform ${
+              isCollapsed ? '' : 'rotate-90'
+            }`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
+            <title>Chevron icon</title>
             <path
               fillRule="evenodd"
               d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -398,6 +404,7 @@ export const CodeProjectPartWrapper = ({
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
+                    <title>File icon</title>
                     <path
                       fillRule="evenodd"
                       d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
@@ -424,12 +431,12 @@ const CustomTaskSectionWrapper = (props: any) => {
   if (
     props.parts?.some(
       (part: any) =>
-        part && typeof part === 'object' && part.type === 'code-project',
+        part && typeof part === 'object' && part.type === 'code-project'
     )
   ) {
     const codeProjectPart = props.parts.find(
       (part: any) =>
-        part && typeof part === 'object' && part.type === 'code-project',
+        part && typeof part === 'object' && part.type === 'code-project'
     );
 
     if (codeProjectPart) {
@@ -469,7 +476,7 @@ const CustomTaskSectionWrapper = (props: any) => {
                             `file-${index + 1}`}
                         </span>
                       </div>
-                    ),
+                    )
                   )}
                 </div>
               </div>

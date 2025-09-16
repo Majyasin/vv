@@ -6,7 +6,7 @@ import * as schema from './schema';
 
 config();
 
-let db: any = null;
+let db: ReturnType<typeof drizzle> | null = null;
 
 // Only initialize database if POSTGRES_URL is available
 if (process.env.POSTGRES_URL) {

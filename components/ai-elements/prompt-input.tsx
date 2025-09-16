@@ -10,6 +10,7 @@ import {
   SquareIcon,
   XIcon,
 } from 'lucide-react';
+import Image from 'next/image';
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -39,7 +40,7 @@ export const fileToDataUrl = (file: File): Promise<string> => {
 
 // Utility function to create image attachment
 export const createImageAttachment = async (
-  file: File,
+  file: File
 ): Promise<ImageAttachment> => {
   const dataUrl = await fileToDataUrl(file);
   return {
@@ -65,7 +66,7 @@ export interface StoredPromptData {
 
 export const savePromptToStorage = (
   message: string,
-  attachments: ImageAttachment[],
+  attachments: ImageAttachment[]
 ) => {
   try {
     const data: StoredPromptData = {
@@ -104,7 +105,7 @@ export const clearPromptFromStorage = () => {
 };
 
 export const createImageAttachmentFromStored = (
-  stored: StoredPromptData['attachments'][0],
+  stored: StoredPromptData['attachments'][0]
 ): ImageAttachment => {
   // Create a mock File object from stored data
   const mockFile = new File([''], stored.fileName, { type: 'image/*' });
@@ -136,7 +137,7 @@ export const PromptInput = ({
       e.stopPropagation();
       onDragOver?.(e);
     },
-    [onDragOver],
+    [onDragOver]
   );
 
   const handleDragLeave = useCallback(
@@ -145,7 +146,7 @@ export const PromptInput = ({
       e.stopPropagation();
       onDragLeave?.(e);
     },
-    [onDragLeave],
+    [onDragLeave]
   );
 
   const handleDrop = useCallback(
@@ -154,7 +155,7 @@ export const PromptInput = ({
       e.stopPropagation();
 
       const files = Array.from(e.dataTransfer.files).filter((file) =>
-        file.type.startsWith('image/'),
+        file.type.startsWith('image/')
       );
 
       if (files.length > 0) {
@@ -163,7 +164,7 @@ export const PromptInput = ({
 
       onDrop?.(e);
     },
-    [onImageDrop, onDrop],
+    [onImageDrop, onDrop]
   );
 
   return (
@@ -171,7 +172,7 @@ export const PromptInput = ({
       className={cn(
         'w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm transition-colors',
         isDragOver && 'border-primary bg-primary/5',
-        className,
+        className
       )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -221,7 +222,7 @@ export const PromptInputTextarea = ({
         'w-full resize-none rounded-none border-none p-3 shadow-none outline-none ring-0',
         'field-sizing-content max-h-[6lh] bg-transparent dark:bg-transparent',
         'focus-visible:ring-0',
-        className,
+        className
       )}
       name="message"
       onChange={(e) => {
@@ -256,7 +257,7 @@ export const PromptInputTools = ({
     className={cn(
       'flex items-center gap-1',
       '[&_button:first-child]:rounded-bl-xl',
-      className,
+      className
     )}
     {...props}
   />
@@ -271,7 +272,7 @@ export const PromptInputButton = ({
   ...props
 }: PromptInputButtonProps) => {
   const newSize =
-    (size ?? Children.count(props.children) > 1) ? 'default' : 'icon';
+    size ?? Children.count(props.children) > 1 ? 'default' : 'icon';
 
   return (
     <Button
@@ -279,7 +280,7 @@ export const PromptInputButton = ({
         'shrink-0 gap-1.5 rounded-lg',
         variant === 'ghost' && 'text-muted-foreground',
         newSize === 'default' && 'px-3',
-        className,
+        className
       )}
       size={newSize}
       type="button"
@@ -342,7 +343,7 @@ export const PromptInputModelSelectTrigger = ({
     className={cn(
       'border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors',
       'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
-      className,
+      className
     )}
     {...props}
   />
@@ -482,7 +483,7 @@ export const PromptInputMicButton = ({
         'transition-colors',
         isListening &&
           'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30',
-        className,
+        className
       )}
       onClick={toggleListening}
       {...props}
@@ -514,7 +515,7 @@ export const PromptInputImageButton = ({
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []).filter((file) =>
-        file.type.startsWith('image/'),
+        file.type.startsWith('image/')
       );
 
       if (files.length > 0) {
@@ -526,7 +527,7 @@ export const PromptInputImageButton = ({
         e.target.value = '';
       }
     },
-    [onImageSelect],
+    [onImageSelect]
   );
 
   return (
@@ -579,9 +580,11 @@ export const PromptInputImagePreview = ({
           key={attachment.id}
           className="group relative overflow-hidden rounded-lg border bg-muted"
         >
-          <img
+          <Image
             src={attachment.preview}
             alt={attachment.file.name}
+            width={64}
+            height={64}
             className="h-16 w-16 object-cover"
           />
           {onRemove && (

@@ -43,11 +43,11 @@ export function ResizableLayout({
       // Clamp the width between min and max
       const clampedWidth = Math.min(
         Math.max(newLeftWidth, minLeftWidth),
-        maxLeftWidth,
+        maxLeftWidth
       );
       setLeftWidth(clampedWidth);
     },
-    [isDragging, minLeftWidth, maxLeftWidth],
+    [isDragging, minLeftWidth, maxLeftWidth]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -81,16 +81,31 @@ export function ResizableLayout({
       <div
         className={cn(
           'group relative w-px cursor-col-resize bg-border transition-all dark:bg-input',
-          isDragging && 'bg-blue-500 dark:bg-blue-400',
+          isDragging && 'bg-blue-500 dark:bg-blue-400'
         )}
         onMouseDown={handleMouseDown}
+        role="separator"
+        aria-label="Resize panels"
+        aria-orientation="vertical"
+        aria-valuenow={leftWidth}
+        aria-valuemin={10}
+        aria-valuemax={90}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const delta = e.key === 'ArrowLeft' ? -5 : 5;
+            const newLeftWidth = Math.max(10, Math.min(90, leftWidth + delta));
+            setLeftWidth(newLeftWidth);
+          }
+        }}
       >
         {/* Blue highlight on hover - 3px wide */}
         <div
           className={cn(
             '-translate-x-1/2 absolute inset-y-0 left-1/2 w-0 bg-blue-500 transition-all duration-200 dark:bg-blue-400',
             'group-hover:w-[3px]',
-            isDragging && 'w-[3px]',
+            isDragging && 'w-[3px]'
           )}
         />
         {/* Wider hit area for better UX */}

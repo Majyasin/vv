@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -17,9 +17,9 @@ export const Suggestions = ({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const checkScrollability = () => {
+  const checkScrollability = useCallback(() => {
     const scrollArea = scrollAreaRef.current?.querySelector(
-      '[data-radix-scroll-area-viewport]',
+      '[data-radix-scroll-area-viewport]'
     ) as HTMLElement;
     if (!scrollArea) {
       return;
@@ -28,11 +28,11 @@ export const Suggestions = ({
     const { scrollLeft, scrollWidth, clientWidth } = scrollArea;
     setCanScrollLeft(scrollLeft > 0);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1); // -1 for rounding
-  };
+  }, []);
 
   useEffect(() => {
     const scrollArea = scrollAreaRef.current?.querySelector(
-      '[data-radix-scroll-area-viewport]',
+      '[data-radix-scroll-area-viewport]'
     ) as HTMLElement;
     if (!scrollArea) {
       return;

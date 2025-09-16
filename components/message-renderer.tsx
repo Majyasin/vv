@@ -3,7 +3,7 @@ import { sharedComponents } from './shared-components';
 
 // Function to preprocess message content and remove V0_FILE markers and shell placeholders
 function preprocessMessageContent(
-  content: MessageBinaryFormat,
+  content: MessageBinaryFormat
 ): MessageBinaryFormat {
   if (!Array.isArray(content)) {
     return content;
@@ -39,7 +39,7 @@ function preprocessMessageContent(
         return processed;
       }
       return item;
-    }) as [number, ...any[]]; // Type assertion to match MessageBinaryFormat structure
+    }) as [number, ...unknown[]]; // Type assertion to match MessageBinaryFormat structure
   });
 }
 

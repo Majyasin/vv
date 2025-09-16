@@ -1,4 +1,4 @@
-import { StreamingMessage } from '@v0-sdk/react';
+import { type MessageBinaryFormat, StreamingMessage } from '@v0-sdk/react';
 import { useEffect, useRef } from 'react';
 import {
   Conversation,
@@ -11,7 +11,7 @@ import { sharedComponents } from '@/components/shared-components';
 
 interface ChatMessage {
   type: 'user' | 'assistant';
-  content: string | any;
+  content: string | MessageBinaryFormat;
   isStreaming?: boolean;
   stream?: ReadableStream<Uint8Array> | null;
 }
@@ -26,19 +26,18 @@ interface ChatMessagesProps {
   chatHistory: ChatMessage[];
   isLoading: boolean;
   currentChat: Chat | null;
-  onStreamingComplete: (finalContent: any) => void;
-  onChatData: (chatData: any) => void;
+  onStreamingComplete: (finalContent: string | MessageBinaryFormat) => void;
+  onChatData: (chatData: { id: string; demo?: string; url?: string }) => void;
   onStreamingStarted?: () => void;
 }
 
 export function ChatMessages({
   chatHistory,
   isLoading,
-  currentChat,
   onStreamingComplete,
   onChatData,
   onStreamingStarted,
-}: ChatMessagesProps) {
+}: Omit<ChatMessagesProps, 'currentChat'>) {
   const streamingStartedRef = useRef(false);
 
   // Reset the streaming started flag when a new message starts loading
@@ -64,7 +63,7 @@ export function ChatMessages({
     <Conversation>
       <ConversationContent>
         {chatHistory.map((msg, index) => (
-          <Message from={msg.type} key={index}>
+          <Message from={msg.type} key={`message-${index}-${msg.type}`}>
             {msg.isStreaming && msg.stream ? (
               <StreamingMessage
                 stream={msg.stream}

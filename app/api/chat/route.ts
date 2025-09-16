@@ -37,8 +37,7 @@ function getClientIP(request: NextRequest): string {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    const { message, chatId, streaming, attachments, projectId } =
-      await request.json();
+    const { message, chatId, streaming, attachments } = await request.json();
 
     if (!message) {
       return NextResponse.json(
@@ -88,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Using baseUrl:', process.env.V0_API_URL || 'default');
 
-    let chat;
+    let chat: ChatDetail | ReadableStream<Uint8Array> | null = null;
 
     if (chatId) {
       // continue existing chat
@@ -196,7 +195,9 @@ export async function POST(request: NextRequest) {
       demo: chatDetail.demo,
       messages: chatDetail.messages?.map((msg) => ({
         ...msg,
-        experimental_content: (msg as any).experimental_content,
+        experimental_content: (
+          msg as typeof msg & { experimental_content?: unknown }
+        ).experimental_content,
       })),
     });
   } catch (error) {

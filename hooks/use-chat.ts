@@ -33,7 +33,6 @@ export function useChat(chatId: string) {
   // Use SWR to fetch chat data
   const {
     data: currentChat,
-    error,
     isLoading: isLoadingChat,
   } = useSWR<Chat>(chatId ? `/api/chats/${chatId}` : null, {
     onError: (error) => {
@@ -65,12 +64,14 @@ export function useChat(chatId: string) {
     if (handoff.chatId === chatId && handoff.stream && handoff.userMessage) {
       console.log('Continuing streaming from context for chat:', chatId);
 
+      const userMessage = handoff.userMessage; // Safe to access here due to condition check
+
       // Add the user message to chat history
       setChatHistory((prev) => [
         ...prev,
         {
           type: 'user',
-          content: handoff.userMessage!,
+          content: userMessage,
         },
       ]);
 
@@ -180,7 +181,7 @@ export function useChat(chatId: string) {
     }
   };
 
-  const handleStreamingComplete = async (finalContent: any) => {
+  const handleStreamingComplete = async (finalContent: unknown[]) => {
     setIsStreaming(false);
     setIsLoading(false);
 
@@ -224,26 +225,28 @@ export function useChat(chatId: string) {
       let newChatId: string | undefined;
 
       // Search through the content structure for chat ID
-      const searchForChatId = (obj: any) => {
+      const searchForChatId = (obj: unknown) => {
         if (obj && typeof obj === 'object') {
+          const objRecord = obj as Record<string, unknown>;
+
           // Look for chat ID - be more specific about what we accept
-          if (obj.chatId && typeof obj.chatId === 'string') {
+          if (objRecord.chatId && typeof objRecord.chatId === 'string') {
             // Validate that it looks like a real chat ID (UUID-like or specific format)
-            if (obj.chatId.length > 10 && obj.chatId !== 'hello-world') {
-              console.log('Accepting chatId:', obj.chatId);
-              newChatId = obj.chatId;
+            if (objRecord.chatId.length > 10 && objRecord.chatId !== 'hello-world') {
+              console.log('Accepting chatId:', objRecord.chatId);
+              newChatId = objRecord.chatId;
             }
           }
 
           // Only use 'id' if it's specifically a chat context and looks like a real ID
-          if (!newChatId && obj.id && typeof obj.id === 'string') {
+          if (!newChatId && objRecord.id && typeof objRecord.id === 'string') {
             // More restrictive check for 'id' field - should look like UUID or be longer
             if (
-              (obj.id.includes('-') && obj.id.length > 20) ||
-              (obj.id.length > 15 && obj.id !== 'hello-world')
+              (objRecord.id.includes('-') && objRecord.id.length > 20) ||
+              (objRecord.id.length > 15 && objRecord.id !== 'hello-world')
             ) {
-              console.log('Accepting id as chatId:', obj.id);
-              newChatId = obj.id;
+              console.log('Accepting id as chatId:', objRecord.id);
+              newChatId = objRecord.id;
             }
           }
 
@@ -251,7 +254,7 @@ export function useChat(chatId: string) {
           if (Array.isArray(obj)) {
             obj.forEach(searchForChatId);
           } else {
-            Object.values(obj).forEach(searchForChatId);
+            Object.values(objRecord).forEach(searchForChatId);
           }
         }
       };

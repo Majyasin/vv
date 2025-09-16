@@ -51,8 +51,18 @@ export const {
   ...authConfig,
   providers: [
     Credentials({
-      credentials: {},
-      async authorize({ email, password }: any) {
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!(credentials?.email && credentials?.password)) {
+          return null;
+        }
+
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+
         const users = await getUser(email);
 
         if (users.length === 0) {
@@ -69,7 +79,9 @@ export const {
 
         const passwordsMatch = await compare(password, user.password);
 
-        if (!passwordsMatch) return null;
+        if (!passwordsMatch) {
+          return null;
+        }
 
         return { ...user, type: 'regular' };
       },

@@ -2,7 +2,7 @@
 
 import { StreamingMessage } from '@v0-sdk/react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   clearPromptFromStorage,
@@ -26,7 +26,6 @@ import { ChatMessages } from '@/components/chat/chat-messages';
 import { PreviewPanel } from '@/components/chat/preview-panel';
 import { AppHeader } from '@/components/shared/app-header';
 import { ResizableLayout } from '@/components/shared/resizable-layout';
-import { useStreaming } from '@/contexts/streaming-context';
 
 // Component that uses useSearchParams - needs to be wrapped in Suspense
 function SearchParamsHandler({ onReset }: { onReset: () => void }) {
@@ -69,9 +68,7 @@ export function HomeClient() {
   } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
-  const _router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { startHandoff } = useStreaming();
 
   const handleReset = () => {
     // Reset all chat-related state
@@ -108,7 +105,7 @@ export function HomeClient() {
       setMessage(storedData.message);
       if (storedData.attachments.length > 0) {
         const restoredAttachments = storedData.attachments.map(
-          createImageAttachmentFromStored,
+          createImageAttachmentFromStored
         );
         setAttachments(restoredAttachments);
       }
@@ -129,7 +126,7 @@ export function HomeClient() {
   const handleImageFiles = async (files: File[]) => {
     try {
       const newAttachments = await Promise.all(
-        files.map((file) => createImageAttachment(file)),
+        files.map((file) => createImageAttachment(file))
       );
       setAttachments((prev) => [...prev, ...newAttachments]);
     } catch (error) {
@@ -319,7 +316,7 @@ export function HomeClient() {
               // Update the current chat with demo URL
               if (demoUrl) {
                 setCurrentChat((prev) =>
-                  prev ? { ...prev, demo: demoUrl } : null,
+                  prev ? { ...prev, demo: demoUrl } : null
                 );
               }
             }
@@ -477,7 +474,7 @@ export function HomeClient() {
                     setIsLoading(false);
                   }}
                 />
-              ) : null,
+              ) : null
             )}
           </div>
         )}
@@ -537,7 +534,7 @@ export function HomeClient() {
                   <PromptInputMicButton
                     onTranscript={(transcript) => {
                       setMessage(
-                        (prev) => prev + (prev ? ' ' : '') + transcript,
+                        (prev) => prev + (prev ? ' ' : '') + transcript
                       );
                     }}
                     onError={(error) => {

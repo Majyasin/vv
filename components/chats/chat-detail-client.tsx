@@ -11,7 +11,6 @@ import { ChatMessages } from '@/components/chat/chat-messages';
 import { PreviewPanel } from '@/components/chat/preview-panel';
 import { AppHeader } from '@/components/shared/app-header';
 import { ResizableLayout } from '@/components/shared/resizable-layout';
-import { useStreaming } from '@/contexts/streaming-context';
 import { useChat } from '@/hooks/use-chat';
 import { cn } from '@/lib/utils';
 
@@ -23,14 +22,12 @@ export function ChatDetailClient() {
   const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { handoff } = useStreaming();
   const {
     message,
     setMessage,
     currentChat,
     isLoading,
     setIsLoading,
-    isStreaming,
     chatHistory,
     isLoadingChat,
     handleSendMessage,
@@ -41,7 +38,7 @@ export function ChatDetailClient() {
   // Wrapper function to handle attachments
   const handleSubmitWithAttachments = (
     e: React.FormEvent<HTMLFormElement>,
-    attachmentUrls?: Array<{ url: string }>,
+    attachmentUrls?: Array<{ url: string }>
   ) => {
     // Clear sessionStorage immediately upon submission
     clearPromptFromStorage();
@@ -73,7 +70,7 @@ export function ChatDetailClient() {
     <div
       className={cn(
         'min-h-screen bg-gray-50 dark:bg-black',
-        isFullscreen && 'fixed inset-0 z-50',
+        isFullscreen && 'fixed inset-0 z-50'
       )}
     >
       <AppHeader />

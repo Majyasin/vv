@@ -8,7 +8,7 @@ interface SWRProviderProps {
 }
 
 interface FetchError extends Error {
-  info?: any;
+  info?: unknown;
   status?: number;
 }
 
@@ -20,7 +20,7 @@ export function SWRProvider({ children }: SWRProviderProps) {
           fetch(url).then((res) => {
             if (!res.ok) {
               const error = new Error(
-                'An error occurred while fetching the data.',
+                'An error occurred while fetching the data.'
               ) as FetchError;
               error.info = res.json();
               error.status = res.status;
