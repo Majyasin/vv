@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { ChatSelector } from './chat-selector';
 import { useSession } from 'next-auth/react';
-import { UserNav } from '@/components/user-nav';
+import { Suspense, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { GitHubIcon } from '@/components/ui/icons';
+import { UserNav } from '@/components/user-nav';
+import { ChatSelector } from './chat-selector';
 
 interface AppHeaderProps {
   className?: string;

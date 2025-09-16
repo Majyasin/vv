@@ -1,36 +1,35 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Copy, Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import type { MissingEnvVar } from '@/lib/env-check'
+import { Check, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import type { MissingEnvVar } from '@/lib/env-check';
 
 interface EnvSetupProps {
-  missingVars: MissingEnvVar[]
+  missingVars: MissingEnvVar[];
 }
 
 export function EnvSetup({ missingVars }: EnvSetupProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const envFileContent = missingVars
     .map((envVar) => {
       if (envVar.example) {
-        return `${envVar.name}=${envVar.example}`
-      } else {
-        return `${envVar.name}=`
+        return `${envVar.name}=${envVar.example}`;
       }
+      return `${envVar.name}=`;
     })
-    .join('\n')
+    .join('\n');
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(envFileContent)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(envFileContent);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error)
+      console.error('Failed to copy to clipboard:', error);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col">
@@ -80,5 +79,5 @@ export function EnvSetup({ missingVars }: EnvSetupProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

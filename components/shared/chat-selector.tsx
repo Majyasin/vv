@@ -1,34 +1,21 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
 import {
-  MessageSquare,
-  MoreHorizontal,
-  Edit2,
-  Trash2,
   Copy,
+  Edit2,
   ExternalLink,
   Eye,
   EyeOff,
-  Users,
   Lock,
-} from 'lucide-react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+  MessageSquare,
+  MoreHorizontal,
+  Trash2,
+  Users,
+} from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -36,112 +23,125 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface Chat {
-  id: string
-  name?: string
-  privacy?: 'public' | 'private' | 'team' | 'team-edit' | 'unlisted'
-  createdAt: string
-  url?: string
+  id: string;
+  name?: string;
+  privacy?: 'public' | 'private' | 'team' | 'team-edit' | 'unlisted';
+  createdAt: string;
+  url?: string;
 }
 
 // Helper function to get display name for a chat
 const getChatDisplayName = (chat: Chat): string => {
-  return chat.name || `Chat ${chat.id.slice(0, 8)}...`
-}
+  return chat.name || `Chat ${chat.id.slice(0, 8)}...`;
+};
 
 // Helper function to get privacy icon
 const getPrivacyIcon = (privacy: string) => {
   switch (privacy) {
     case 'public':
-      return <Eye className="h-4 w-4" />
+      return <Eye className="h-4 w-4" />;
     case 'private':
-      return <EyeOff className="h-4 w-4" />
+      return <EyeOff className="h-4 w-4" />;
     case 'team':
     case 'team-edit':
-      return <Users className="h-4 w-4" />
+      return <Users className="h-4 w-4" />;
     case 'unlisted':
-      return <Lock className="h-4 w-4" />
+      return <Lock className="h-4 w-4" />;
     default:
-      return <EyeOff className="h-4 w-4" />
+      return <EyeOff className="h-4 w-4" />;
   }
-}
+};
 
 // Helper function to get privacy display name
 const getPrivacyDisplayName = (privacy: string) => {
   switch (privacy) {
     case 'public':
-      return 'Public'
+      return 'Public';
     case 'private':
-      return 'Private'
+      return 'Private';
     case 'team':
-      return 'Team'
+      return 'Team';
     case 'team-edit':
-      return 'Team Edit'
+      return 'Team Edit';
     case 'unlisted':
-      return 'Unlisted'
+      return 'Unlisted';
     default:
-      return 'Private'
+      return 'Private';
   }
-}
+};
 
 export function ChatSelector() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const { data: session } = useSession()
-  const [chats, setChats] = useState<Chat[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false)
-  const [isVisibilityDialogOpen, setIsVisibilityDialogOpen] = useState(false)
-  const [renameChatName, setRenameChatName] = useState('')
+  const router = useRouter();
+  const pathname = usePathname();
+  const { data: session } = useSession();
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false);
+  const [isVisibilityDialogOpen, setIsVisibilityDialogOpen] = useState(false);
+  const [renameChatName, setRenameChatName] = useState('');
   const [selectedVisibility, setSelectedVisibility] = useState<
     'public' | 'private' | 'team' | 'team-edit' | 'unlisted'
-  >('private')
-  const [isRenamingChat, setIsRenamingChat] = useState(false)
-  const [isDeletingChat, setIsDeletingChat] = useState(false)
-  const [isDuplicatingChat, setIsDuplicatingChat] = useState(false)
-  const [isChangingVisibility, setIsChangingVisibility] = useState(false)
+  >('private');
+  const [isRenamingChat, setIsRenamingChat] = useState(false);
+  const [isDeletingChat, setIsDeletingChat] = useState(false);
+  const [isDuplicatingChat, setIsDuplicatingChat] = useState(false);
+  const [isChangingVisibility, setIsChangingVisibility] = useState(false);
 
   // Get current chat ID if on a chat page
   const currentChatId = pathname?.startsWith('/chats/')
     ? pathname.split('/')[2]
-    : null
+    : null;
 
   // Fetch user's chats
   useEffect(() => {
-    if (!session?.user?.id) return
+    if (!session?.user?.id) return;
 
     const fetchChats = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await fetch('/api/chats')
+        const response = await fetch('/api/chats');
         if (response.ok) {
-          const data = await response.json()
-          setChats(data.data || [])
+          const data = await response.json();
+          setChats(data.data || []);
         }
       } catch (error) {
-        console.error('Failed to fetch chats:', error)
+        console.error('Failed to fetch chats:', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchChats()
-  }, [session?.user?.id])
+    fetchChats();
+  }, [session?.user?.id]);
 
   const handleValueChange = (chatId: string) => {
-    router.push(`/chats/${chatId}`)
-  }
+    router.push(`/chats/${chatId}`);
+  };
 
   const handleRenameChat = async () => {
-    if (!renameChatName.trim() || !currentChatId) return
+    if (!(renameChatName.trim() && currentChatId)) return;
 
-    setIsRenamingChat(true)
+    setIsRenamingChat(true);
     try {
       const response = await fetch(`/api/chats/${currentChatId}`, {
         method: 'PATCH',
@@ -151,61 +151,61 @@ export function ChatSelector() {
         body: JSON.stringify({
           name: renameChatName.trim(),
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to rename chat')
+        throw new Error('Failed to rename chat');
       }
 
-      const updatedChat = await response.json()
+      const updatedChat = await response.json();
 
       // Update the chat in the list
       setChats((prev) =>
         prev.map((c) =>
           c.id === currentChatId ? { ...c, name: updatedChat.name } : c,
         ),
-      )
+      );
 
       // Close dialog and reset form
-      setIsRenameDialogOpen(false)
-      setRenameChatName('')
+      setIsRenameDialogOpen(false);
+      setRenameChatName('');
     } catch (error) {
-      console.error('Error renaming chat:', error)
+      console.error('Error renaming chat:', error);
     } finally {
-      setIsRenamingChat(false)
+      setIsRenamingChat(false);
     }
-  }
+  };
 
   const handleDeleteChat = async () => {
-    if (!currentChatId) return
+    if (!currentChatId) return;
 
-    setIsDeletingChat(true)
+    setIsDeletingChat(true);
     try {
       const response = await fetch(`/api/chats/${currentChatId}`, {
         method: 'DELETE',
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to delete chat')
+        throw new Error('Failed to delete chat');
       }
 
       // Remove the chat from the list
-      setChats((prev) => prev.filter((c) => c.id !== currentChatId))
+      setChats((prev) => prev.filter((c) => c.id !== currentChatId));
 
       // Close dialog and navigate to home
-      setIsDeleteDialogOpen(false)
-      router.push('/')
+      setIsDeleteDialogOpen(false);
+      router.push('/');
     } catch (error) {
-      console.error('Error deleting chat:', error)
+      console.error('Error deleting chat:', error);
     } finally {
-      setIsDeletingChat(false)
+      setIsDeletingChat(false);
     }
-  }
+  };
 
   const handleDuplicateChat = async () => {
-    if (!currentChatId) return
+    if (!currentChatId) return;
 
-    setIsDuplicatingChat(true)
+    setIsDuplicatingChat(true);
     try {
       const response = await fetch('/api/chat/fork', {
         method: 'POST',
@@ -213,28 +213,28 @@ export function ChatSelector() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ chatId: currentChatId }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to duplicate chat')
+        throw new Error('Failed to duplicate chat');
       }
 
-      const result = await response.json()
+      const result = await response.json();
 
       // Close dialog and navigate to the new forked chat
-      setIsDuplicateDialogOpen(false)
-      router.push(`/chats/${result.id}`)
+      setIsDuplicateDialogOpen(false);
+      router.push(`/chats/${result.id}`);
     } catch (error) {
-      console.error('Error duplicating chat:', error)
+      console.error('Error duplicating chat:', error);
     } finally {
-      setIsDuplicatingChat(false)
+      setIsDuplicatingChat(false);
     }
-  }
+  };
 
   const handleChangeVisibility = async () => {
-    if (!currentChatId) return
+    if (!currentChatId) return;
 
-    setIsChangingVisibility(true)
+    setIsChangingVisibility(true);
     try {
       const response = await fetch(`/api/chats/${currentChatId}/visibility`, {
         method: 'PATCH',
@@ -242,36 +242,36 @@ export function ChatSelector() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ privacy: selectedVisibility }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to change chat visibility')
+        throw new Error('Failed to change chat visibility');
       }
 
-      const updatedChat = await response.json()
+      const updatedChat = await response.json();
 
       // Update the chat in the list
       setChats((prev) =>
         prev.map((c) =>
           c.id === currentChatId ? { ...c, privacy: updatedChat.privacy } : c,
         ),
-      )
+      );
 
       // Close dialog
-      setIsVisibilityDialogOpen(false)
+      setIsVisibilityDialogOpen(false);
     } catch (error) {
-      console.error('Error changing chat visibility:', error)
+      console.error('Error changing chat visibility:', error);
     } finally {
-      setIsChangingVisibility(false)
+      setIsChangingVisibility(false);
     }
-  }
+  };
 
   // Don't show if user is not authenticated
-  if (!session?.user?.id) return null
+  if (!session?.user?.id) return null;
 
   const currentChat = currentChatId
     ? chats.find((c) => c.id === currentChatId)
-    : null
+    : null;
 
   return (
     <>
@@ -356,8 +356,8 @@ export function ChatSelector() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedVisibility(currentChat.privacy || 'private')
-                  setIsVisibilityDialogOpen(true)
+                  setSelectedVisibility(currentChat.privacy || 'private');
+                  setIsVisibilityDialogOpen(true);
                 }}
                 disabled={
                   isRenamingChat ||
@@ -371,8 +371,8 @@ export function ChatSelector() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setRenameChatName(currentChat.name || '')
-                  setIsRenameDialogOpen(true)
+                  setRenameChatName(currentChat.name || '');
+                  setIsRenameDialogOpen(true);
                 }}
                 disabled={
                   isRenamingChat ||
@@ -419,7 +419,7 @@ export function ChatSelector() {
               onChange={(e) => setRenameChatName(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !isRenamingChat) {
-                  handleRenameChat()
+                  handleRenameChat();
                 }
               }}
               disabled={isRenamingChat}
@@ -429,8 +429,8 @@ export function ChatSelector() {
             <Button
               variant="outline"
               onClick={() => {
-                setIsRenameDialogOpen(false)
-                setRenameChatName('')
+                setIsRenameDialogOpen(false);
+                setRenameChatName('');
               }}
               disabled={isRenamingChat}
             >
@@ -607,5 +607,5 @@ export function ChatSelector() {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

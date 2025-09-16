@@ -1,16 +1,6 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { cn } from '@/lib/utils'
-import type { ChatStatus } from 'ai'
+import type { ChatStatus } from 'ai';
 import {
   ArrowUpIcon,
   ImageIcon,
@@ -19,48 +9,58 @@ import {
   MicOffIcon,
   SquareIcon,
   XIcon,
-} from 'lucide-react'
+} from 'lucide-react';
 import type {
   ComponentProps,
   HTMLAttributes,
   KeyboardEventHandler,
-} from 'react'
-import { Children, useCallback, useEffect, useRef, useState } from 'react'
+} from 'react';
+import { Children, useCallback, useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 // Utility function to convert file to data URL
 export const fileToDataUrl = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
-}
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
 
 // Utility function to create image attachment
 export const createImageAttachment = async (
   file: File,
 ): Promise<ImageAttachment> => {
-  const dataUrl = await fileToDataUrl(file)
+  const dataUrl = await fileToDataUrl(file);
   return {
     id: Math.random().toString(36).substr(2, 9),
     file,
     dataUrl,
     preview: dataUrl,
-  }
-}
+  };
+};
 
 // SessionStorage utilities for prompt persistence
-const PROMPT_STORAGE_KEY = 'v0-prompt-data'
+const PROMPT_STORAGE_KEY = 'v0-prompt-data';
 
 export interface StoredPromptData {
-  message: string
+  message: string;
   attachments: Array<{
-    id: string
-    fileName: string
-    dataUrl: string
-    preview: string
-  }>
+    id: string;
+    fileName: string;
+    dataUrl: string;
+    preview: string;
+  }>;
 }
 
 export const savePromptToStorage = (
@@ -76,50 +76,50 @@ export const savePromptToStorage = (
         dataUrl: att.dataUrl,
         preview: att.preview,
       })),
-    }
-    sessionStorage.setItem(PROMPT_STORAGE_KEY, JSON.stringify(data))
+    };
+    sessionStorage.setItem(PROMPT_STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
-    console.warn('Failed to save prompt to sessionStorage:', error)
+    console.warn('Failed to save prompt to sessionStorage:', error);
   }
-}
+};
 
 export const loadPromptFromStorage = (): StoredPromptData | null => {
   try {
-    const stored = sessionStorage.getItem(PROMPT_STORAGE_KEY)
+    const stored = sessionStorage.getItem(PROMPT_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored)
+      return JSON.parse(stored);
     }
   } catch (error) {
-    console.warn('Failed to load prompt from sessionStorage:', error)
+    console.warn('Failed to load prompt from sessionStorage:', error);
   }
-  return null
-}
+  return null;
+};
 
 export const clearPromptFromStorage = () => {
   try {
-    sessionStorage.removeItem(PROMPT_STORAGE_KEY)
+    sessionStorage.removeItem(PROMPT_STORAGE_KEY);
   } catch (error) {
-    console.warn('Failed to clear prompt from sessionStorage:', error)
+    console.warn('Failed to clear prompt from sessionStorage:', error);
   }
-}
+};
 
 export const createImageAttachmentFromStored = (
   stored: StoredPromptData['attachments'][0],
 ): ImageAttachment => {
   // Create a mock File object from stored data
-  const mockFile = new File([''], stored.fileName, { type: 'image/*' })
+  const mockFile = new File([''], stored.fileName, { type: 'image/*' });
   return {
     id: stored.id,
     file: mockFile,
     dataUrl: stored.dataUrl,
     preview: stored.preview,
-  }
-}
+  };
+};
 
 export type PromptInputProps = HTMLAttributes<HTMLFormElement> & {
-  onImageDrop?: (files: File[]) => void
-  isDragOver?: boolean
-}
+  onImageDrop?: (files: File[]) => void;
+  isDragOver?: boolean;
+};
 
 export const PromptInput = ({
   className,
@@ -132,39 +132,39 @@ export const PromptInput = ({
 }: PromptInputProps) => {
   const handleDragOver = useCallback(
     (e: React.DragEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
-      onDragOver?.(e)
+      e.preventDefault();
+      e.stopPropagation();
+      onDragOver?.(e);
     },
     [onDragOver],
-  )
+  );
 
   const handleDragLeave = useCallback(
     (e: React.DragEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
-      onDragLeave?.(e)
+      e.preventDefault();
+      e.stopPropagation();
+      onDragLeave?.(e);
     },
     [onDragLeave],
-  )
+  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
+      e.preventDefault();
+      e.stopPropagation();
 
       const files = Array.from(e.dataTransfer.files).filter((file) =>
         file.type.startsWith('image/'),
-      )
+      );
 
       if (files.length > 0) {
-        onImageDrop?.(files)
+        onImageDrop?.(files);
       }
 
-      onDrop?.(e)
+      onDrop?.(e);
     },
     [onImageDrop, onDrop],
-  )
+  );
 
   return (
     <form
@@ -178,13 +178,13 @@ export const PromptInput = ({
       onDrop={handleDrop}
       {...props}
     />
-  )
-}
+  );
+};
 
 export type PromptInputTextareaProps = ComponentProps<typeof Textarea> & {
-  minHeight?: number
-  maxHeight?: number
-}
+  minHeight?: number;
+  maxHeight?: number;
+};
 
 export const PromptInputTextarea = ({
   onChange,
@@ -198,22 +198,22 @@ export const PromptInputTextarea = ({
     if (e.key === 'Enter') {
       // Don't submit if IME composition is in progress
       if (e.nativeEvent.isComposing) {
-        return
+        return;
       }
 
       if (e.shiftKey) {
         // Allow newline
-        return
+        return;
       }
 
       // Submit on Enter (without Shift)
-      e.preventDefault()
-      const form = e.currentTarget.form
+      e.preventDefault();
+      const form = e.currentTarget.form;
       if (form) {
-        form.requestSubmit()
+        form.requestSubmit();
       }
     }
-  }
+  };
 
   return (
     <Textarea
@@ -225,16 +225,16 @@ export const PromptInputTextarea = ({
       )}
       name="message"
       onChange={(e) => {
-        onChange?.(e)
+        onChange?.(e);
       }}
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
       {...props}
     />
-  )
-}
+  );
+};
 
-export type PromptInputToolbarProps = HTMLAttributes<HTMLDivElement>
+export type PromptInputToolbarProps = HTMLAttributes<HTMLDivElement>;
 
 export const PromptInputToolbar = ({
   className,
@@ -244,9 +244,9 @@ export const PromptInputToolbar = ({
     className={cn('flex items-center justify-between p-1', className)}
     {...props}
   />
-)
+);
 
-export type PromptInputToolsProps = HTMLAttributes<HTMLDivElement>
+export type PromptInputToolsProps = HTMLAttributes<HTMLDivElement>;
 
 export const PromptInputTools = ({
   className,
@@ -260,9 +260,9 @@ export const PromptInputTools = ({
     )}
     {...props}
   />
-)
+);
 
-export type PromptInputButtonProps = ComponentProps<typeof Button>
+export type PromptInputButtonProps = ComponentProps<typeof Button>;
 
 export const PromptInputButton = ({
   variant = 'ghost',
@@ -271,7 +271,7 @@ export const PromptInputButton = ({
   ...props
 }: PromptInputButtonProps) => {
   const newSize =
-    (size ?? Children.count(props.children) > 1) ? 'default' : 'icon'
+    (size ?? Children.count(props.children) > 1) ? 'default' : 'icon';
 
   return (
     <Button
@@ -286,12 +286,12 @@ export const PromptInputButton = ({
       variant={variant}
       {...props}
     />
-  )
-}
+  );
+};
 
 export type PromptInputSubmitProps = ComponentProps<typeof Button> & {
-  status?: ChatStatus
-}
+  status?: ChatStatus;
+};
 
 export const PromptInputSubmit = ({
   className,
@@ -301,14 +301,14 @@ export const PromptInputSubmit = ({
   children,
   ...props
 }: PromptInputSubmitProps) => {
-  let Icon = <ArrowUpIcon className="size-4" />
+  let Icon = <ArrowUpIcon className="size-4" />;
 
   if (status === 'submitted') {
-    Icon = <Loader2Icon className="size-4 animate-spin" />
+    Icon = <Loader2Icon className="size-4 animate-spin" />;
   } else if (status === 'streaming') {
-    Icon = <SquareIcon className="size-4" />
+    Icon = <SquareIcon className="size-4" />;
   } else if (status === 'error') {
-    Icon = <XIcon className="size-4" />
+    Icon = <XIcon className="size-4" />;
   }
 
   return (
@@ -321,18 +321,18 @@ export const PromptInputSubmit = ({
     >
       {children ?? Icon}
     </Button>
-  )
-}
+  );
+};
 
-export type PromptInputModelSelectProps = ComponentProps<typeof Select>
+export type PromptInputModelSelectProps = ComponentProps<typeof Select>;
 
 export const PromptInputModelSelect = (props: PromptInputModelSelectProps) => (
   <Select {...props} />
-)
+);
 
 export type PromptInputModelSelectTriggerProps = ComponentProps<
   typeof SelectTrigger
->
+>;
 
 export const PromptInputModelSelectTrigger = ({
   className,
@@ -346,43 +346,43 @@ export const PromptInputModelSelectTrigger = ({
     )}
     {...props}
   />
-)
+);
 
 export type PromptInputModelSelectContentProps = ComponentProps<
   typeof SelectContent
->
+>;
 
 export const PromptInputModelSelectContent = ({
   className,
   ...props
 }: PromptInputModelSelectContentProps) => (
   <SelectContent className={cn(className)} {...props} />
-)
+);
 
-export type PromptInputModelSelectItemProps = ComponentProps<typeof SelectItem>
+export type PromptInputModelSelectItemProps = ComponentProps<typeof SelectItem>;
 
 export const PromptInputModelSelectItem = ({
   className,
   ...props
 }: PromptInputModelSelectItemProps) => (
   <SelectItem className={cn(className)} {...props} />
-)
+);
 
 export type PromptInputModelSelectValueProps = ComponentProps<
   typeof SelectValue
->
+>;
 
 export const PromptInputModelSelectValue = ({
   className,
   ...props
 }: PromptInputModelSelectValueProps) => (
   <SelectValue className={cn(className)} {...props} />
-)
+);
 
 export type PromptInputMicButtonProps = ComponentProps<typeof Button> & {
-  onTranscript?: (transcript: string) => void
-  onError?: (error: string) => void
-}
+  onTranscript?: (transcript: string) => void;
+  onError?: (error: string) => void;
+};
 
 export const PromptInputMicButton = ({
   className,
@@ -390,88 +390,88 @@ export const PromptInputMicButton = ({
   onError,
   ...props
 }: PromptInputMicButtonProps) => {
-  const [isListening, setIsListening] = useState(false)
-  const [isSupported, setIsSupported] = useState(false)
-  const recognitionRef = useRef<SpeechRecognition | null>(null)
-  const isCleaningUpRef = useRef(false)
+  const [isListening, setIsListening] = useState(false);
+  const [isSupported, setIsSupported] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const isCleaningUpRef = useRef(false);
 
   useEffect(() => {
     // Check if speech recognition is supported
     const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
-      setIsSupported(true)
-      const recognition = new SpeechRecognition()
-      recognition.continuous = false
-      recognition.interimResults = false
-      recognition.lang = 'en-US'
+      setIsSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
 
       recognition.onstart = () => {
         if (!isCleaningUpRef.current) {
-          setIsListening(true)
+          setIsListening(true);
         }
-      }
+      };
 
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         if (!isCleaningUpRef.current) {
-          const transcript = event.results[0][0].transcript
-          onTranscript?.(transcript)
-          setIsListening(false)
+          const transcript = event.results[0][0].transcript;
+          onTranscript?.(transcript);
+          setIsListening(false);
         }
-      }
+      };
 
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         // Don't report "aborted" errors as they're usually from cleanup or natural timeout
         if (event.error !== 'aborted' && !isCleaningUpRef.current) {
-          console.error('Speech recognition error:', event.error)
-          onError?.(event.error)
+          console.error('Speech recognition error:', event.error);
+          onError?.(event.error);
         }
-        setIsListening(false)
-      }
+        setIsListening(false);
+      };
 
       recognition.onend = () => {
         if (!isCleaningUpRef.current) {
-          setIsListening(false)
+          setIsListening(false);
         }
-      }
+      };
 
-      recognitionRef.current = recognition
+      recognitionRef.current = recognition;
     }
 
     return () => {
-      isCleaningUpRef.current = true
+      isCleaningUpRef.current = true;
       if (recognitionRef.current) {
         try {
-          recognitionRef.current.abort()
+          recognitionRef.current.abort();
         } catch (error) {
           // Ignore errors during cleanup
         }
       }
-    }
-  }, [onTranscript, onError])
+    };
+  }, [onTranscript, onError]);
 
   const toggleListening = useCallback(() => {
-    if (!recognitionRef.current || isCleaningUpRef.current) return
+    if (!recognitionRef.current || isCleaningUpRef.current) return;
 
     if (isListening) {
       try {
-        recognitionRef.current.stop()
+        recognitionRef.current.stop();
       } catch (error) {
-        console.warn('Error stopping speech recognition:', error)
-        setIsListening(false)
+        console.warn('Error stopping speech recognition:', error);
+        setIsListening(false);
       }
     } else {
       try {
-        recognitionRef.current.start()
+        recognitionRef.current.start();
       } catch (error) {
-        console.error('Error starting speech recognition:', error)
-        onError?.('Failed to start speech recognition')
+        console.error('Error starting speech recognition:', error);
+        onError?.('Failed to start speech recognition');
       }
     }
-  }, [isListening, onError])
+  }, [isListening, onError]);
 
   if (!isSupported) {
-    return null
+    return null;
   }
 
   return (
@@ -491,41 +491,41 @@ export const PromptInputMicButton = ({
         <MicIcon className="size-4" />
       )}
     </PromptInputButton>
-  )
-}
+  );
+};
 
 export type PromptInputImageButtonProps = ComponentProps<typeof Button> & {
-  onImageSelect?: (files: File[]) => void
-}
+  onImageSelect?: (files: File[]) => void;
+};
 
 export const PromptInputImageButton = ({
   className,
   onImageSelect,
   ...props
 }: PromptInputImageButtonProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
+    fileInputRef.current?.click();
+  }, []);
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []).filter((file) =>
         file.type.startsWith('image/'),
-      )
+      );
 
       if (files.length > 0) {
-        onImageSelect?.(files)
+        onImageSelect?.(files);
       }
 
       // Reset the input so the same file can be selected again
       if (e.target) {
-        e.target.value = ''
+        e.target.value = '';
       }
     },
     [onImageSelect],
-  )
+  );
 
   return (
     <>
@@ -545,28 +545,28 @@ export const PromptInputImageButton = ({
         <ImageIcon className="size-4" />
       </PromptInputButton>
     </>
-  )
-}
+  );
+};
 
 export type ImageAttachment = {
-  id: string
-  file: File
-  dataUrl: string
-  preview: string
-}
+  id: string;
+  file: File;
+  dataUrl: string;
+  preview: string;
+};
 
 export type PromptInputImagePreviewProps = {
-  attachments: ImageAttachment[]
-  onRemove?: (id: string) => void
-  className?: string
-}
+  attachments: ImageAttachment[];
+  onRemove?: (id: string) => void;
+  className?: string;
+};
 
 export const PromptInputImagePreview = ({
   attachments,
   onRemove,
   className,
 }: PromptInputImagePreviewProps) => {
-  if (attachments.length === 0) return null
+  if (attachments.length === 0) return null;
 
   return (
     <div className={cn('flex flex-wrap gap-2 p-2', className)}>
@@ -595,5 +595,5 @@ export const PromptInputImagePreview = ({
         </div>
       ))}
     </div>
-  )
-}
+  );
+};

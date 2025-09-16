@@ -1,11 +1,11 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-import { nanoid } from 'nanoid'
+import { type ClassValue, clsx } from 'clsx';
+import { nanoid } from 'nanoid';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function generateUUID(): string {
-  return nanoid()
+  return nanoid();
 }

@@ -1,8 +1,8 @@
 export interface MissingEnvVar {
-  name: string
-  description: string
-  example: string
-  required: boolean
+  name: string;
+  description: string;
+  example: string;
+  required: boolean;
 }
 
 export function checkRequiredEnvVars(): MissingEnvVar[] {
@@ -25,22 +25,22 @@ export function checkRequiredEnvVars(): MissingEnvVar[] {
       example: '', // No example - user needs to provide their own
       required: true,
     },
-  ]
+  ];
 
   const missing = requiredVars.filter((envVar) => {
-    const value = process.env[envVar.name]
-    return !value || value.trim() === ''
-  })
+    const value = process.env[envVar.name];
+    return !value || value.trim() === '';
+  });
 
-  return missing
+  return missing;
 }
 
 export function hasAllRequiredEnvVars(): boolean {
-  return checkRequiredEnvVars().length === 0
+  return checkRequiredEnvVars().length === 0;
 }
 
 export const hasEnvVars = !!(
   process.env.V0_API_KEY &&
   process.env.AUTH_SECRET &&
   process.env.POSTGRES_URL
-)
+);

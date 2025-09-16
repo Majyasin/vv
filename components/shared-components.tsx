@@ -1,24 +1,24 @@
-import React from 'react'
 import {
-  CodeProjectPart,
   CodeBlock,
+  CodeProjectPart,
+  type CodeProjectPartProps,
   MathPart,
-  ThinkingSectionProps,
-  TaskSectionProps,
-  CodeProjectPartProps,
-} from '@v0-sdk/react'
+  type TaskSectionProps,
+  type ThinkingSectionProps,
+} from '@v0-sdk/react';
+import React from 'react';
 import {
   Reasoning,
-  ReasoningTrigger,
   ReasoningContent,
-} from '@/components/ai-elements/reasoning'
+  ReasoningTrigger,
+} from '@/components/ai-elements/reasoning';
 import {
   Task,
-  TaskTrigger,
   TaskContent,
   TaskItem,
   TaskItemFile,
-} from '@/components/ai-elements/task'
+  TaskTrigger,
+} from '@/components/ai-elements/task';
 
 // Wrapper component to adapt AI Elements Reasoning to @v0-sdk/react ThinkingSection
 export const ThinkingSectionWrapper = ({
@@ -49,8 +49,8 @@ export const ThinkingSectionWrapper = ({
             : 'No thinking content available')}
       </ReasoningContent>
     </Reasoning>
-  )
-}
+  );
+};
 
 // Wrapper component to adapt AI Elements Task to @v0-sdk/react TaskSection
 export const TaskSectionWrapper = ({
@@ -78,17 +78,17 @@ export const TaskSectionWrapper = ({
           parts.length > 0 &&
           parts.map((part, index) => {
             if (typeof part === 'string') {
-              return <TaskItem key={index}>{part}</TaskItem>
+              return <TaskItem key={index}>{part}</TaskItem>;
             }
 
             // Handle structured task data with proper AI Elements components
             if (part && typeof part === 'object') {
-              const partObj = part as any
+              const partObj = part as any;
 
               if (partObj.type === 'starting-repo-search' && partObj.query) {
                 return (
                   <TaskItem key={index}>Searching: "{partObj.query}"</TaskItem>
-                )
+                );
               }
 
               if (
@@ -104,15 +104,15 @@ export const TaskSectionWrapper = ({
                       </TaskItemFile>
                     ))}
                   </TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'fetching-diagnostics') {
-                return <TaskItem key={index}>Checking for issues...</TaskItem>
+                return <TaskItem key={index}>Checking for issues...</TaskItem>;
               }
 
               if (partObj.type === 'diagnostics-passed') {
-                return <TaskItem key={index}>✓ No issues found</TaskItem>
+                return <TaskItem key={index}>✓ No issues found</TaskItem>;
               }
 
               // Handle task-read-file-v1 part types
@@ -121,7 +121,7 @@ export const TaskSectionWrapper = ({
                   <TaskItem key={index}>
                     Reading file <TaskItemFile>{partObj.filePath}</TaskItemFile>
                   </TaskItem>
-                )
+                );
               }
 
               // Handle task-coding-v1 part types
@@ -135,24 +135,24 @@ export const TaskSectionWrapper = ({
                       </TaskItemFile>
                     ))}
                   </TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'launch-tasks') {
-                return <TaskItem key={index}>Starting tasks...</TaskItem>
+                return <TaskItem key={index}>Starting tasks...</TaskItem>;
               }
 
               // Handle task-search-web-v1 part types
               if (partObj.type === 'starting-web-search' && partObj.query) {
                 return (
                   <TaskItem key={index}>Searching: "{partObj.query}"</TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'got-results' && partObj.count) {
                 return (
                   <TaskItem key={index}>Found {partObj.count} results</TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'finished-web-search' && partObj.answer) {
@@ -162,7 +162,7 @@ export const TaskSectionWrapper = ({
                       {partObj.answer}
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Handle design inspiration task parts
@@ -171,7 +171,7 @@ export const TaskSectionWrapper = ({
                   <TaskItem key={index}>
                     Generating design inspiration...
                   </TaskItem>
-                )
+                );
               }
 
               if (
@@ -199,14 +199,14 @@ export const TaskSectionWrapper = ({
                         ))}
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Handle other potential task types
               if (partObj.type === 'analyzing-requirements') {
                 return (
                   <TaskItem key={index}>Analyzing requirements...</TaskItem>
-                )
+                );
               }
 
               if (
@@ -220,7 +220,7 @@ export const TaskSectionWrapper = ({
                       requirements
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Handle additional common task part types
@@ -231,7 +231,7 @@ export const TaskSectionWrapper = ({
                       Thinking...
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'processing' || partObj.type === 'working') {
@@ -241,7 +241,7 @@ export const TaskSectionWrapper = ({
                       Processing...
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               if (partObj.type === 'complete' || partObj.type === 'finished') {
@@ -251,7 +251,7 @@ export const TaskSectionWrapper = ({
                       ✓ Complete
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Handle error states
@@ -262,15 +262,15 @@ export const TaskSectionWrapper = ({
                       ✗ {partObj.error || partObj.message || 'Task failed'}
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Fallback for other structured data
               // Try to extract meaningful information from unknown task parts
-              const taskType = partObj.type || 'unknown'
-              const status = partObj.status
+              const taskType = partObj.type || 'unknown';
+              const status = partObj.status;
               const message =
-                partObj.message || partObj.description || partObj.text
+                partObj.message || partObj.description || partObj.text;
 
               if (message) {
                 return (
@@ -279,7 +279,7 @@ export const TaskSectionWrapper = ({
                       {message}
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               if (status) {
@@ -289,7 +289,7 @@ export const TaskSectionWrapper = ({
                       {status.replace(/-/g, ' ')}...
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Show task type as a readable label
@@ -298,7 +298,7 @@ export const TaskSectionWrapper = ({
                   .replace(/-/g, ' ')
                   .replace(/([a-z])([A-Z])/g, '$1 $2')
                   .toLowerCase()
-                  .replace(/^\w/, (c: string) => c.toUpperCase())
+                  .replace(/^\w/, (c: string) => c.toUpperCase());
 
                 return (
                   <TaskItem key={index}>
@@ -306,7 +306,7 @@ export const TaskSectionWrapper = ({
                       {readableType}
                     </div>
                   </TaskItem>
-                )
+                );
               }
 
               // Final fallback - only show JSON for truly unknown structures
@@ -321,17 +321,17 @@ export const TaskSectionWrapper = ({
                     </div>
                   </details>
                 </TaskItem>
-              )
+              );
             }
 
-            return null
+            return null;
           })}
 
         {children && <TaskItem>{children}</TaskItem>}
       </TaskContent>
     </Task>
-  )
-}
+  );
+};
 
 // Wrapper component to adapt AI Elements styling to @v0-sdk/react CodeProjectPart
 export const CodeProjectPartWrapper = ({
@@ -345,7 +345,7 @@ export const CodeProjectPartWrapper = ({
   iconRenderer,
   ...props
 }: CodeProjectPartProps) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(collapsed ?? true)
+  const [isCollapsed, setIsCollapsed] = React.useState(collapsed ?? true);
 
   return (
     <div
@@ -415,8 +415,8 @@ export const CodeProjectPartWrapper = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 // Shared components object that can be used by both StreamingMessage and MessageRenderer
 // Custom TaskSection that handles code projects properly
@@ -432,7 +432,7 @@ const CustomTaskSectionWrapper = (props: any) => {
     const codeProjectPart = props.parts.find(
       (part: any) =>
         part && typeof part === 'object' && part.type === 'code-project',
-    )
+    );
 
     if (codeProjectPart) {
       return (
@@ -477,7 +477,7 @@ const CustomTaskSectionWrapper = (props: any) => {
               </div>
             )}
         </CodeProjectPartWrapper>
-      )
+      );
     }
   }
 
@@ -488,7 +488,7 @@ const CustomTaskSectionWrapper = (props: any) => {
         {...props}
         title={props.title || 'Generating Design Inspiration'}
       />
-    )
+    );
   }
 
   // Handle other potential new task types
@@ -503,7 +503,7 @@ const CustomTaskSectionWrapper = (props: any) => {
       .replace('-v1', '')
       .split('-')
       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
+      .join(' ');
 
     return (
       <TaskSectionWrapper
@@ -515,12 +515,12 @@ const CustomTaskSectionWrapper = (props: any) => {
           taskName
         }
       />
-    )
+    );
   }
 
   // Otherwise, use the regular task wrapper
-  return <TaskSectionWrapper {...props} />
-}
+  return <TaskSectionWrapper {...props} />;
+};
 
 export const sharedComponents = {
   // AI Elements components for structured content
@@ -583,4 +583,4 @@ export const sharedComponents = {
   em: {
     className: 'italic text-gray-700 dark:text-gray-300',
   },
-}
+};

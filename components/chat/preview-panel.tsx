@@ -1,25 +1,25 @@
+import { Maximize, Minimize, Monitor, RefreshCw } from 'lucide-react';
 import {
   WebPreview,
+  WebPreviewBody,
   WebPreviewNavigation,
   WebPreviewNavigationButton,
   WebPreviewUrl,
-  WebPreviewBody,
-} from '@/components/ai-elements/web-preview'
-import { RefreshCw, Monitor, Maximize, Minimize } from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from '@/components/ai-elements/web-preview';
+import { cn } from '@/lib/utils';
 
 interface Chat {
-  id: string
-  demo?: string
-  url?: string
+  id: string;
+  demo?: string;
+  url?: string;
 }
 
 interface PreviewPanelProps {
-  currentChat: Chat | null
-  isFullscreen: boolean
-  setIsFullscreen: (fullscreen: boolean) => void
-  refreshKey: number
-  setRefreshKey: (key: number | ((prev: number) => number)) => void
+  currentChat: Chat | null;
+  isFullscreen: boolean;
+  setIsFullscreen: (fullscreen: boolean) => void;
+  refreshKey: number;
+  setRefreshKey: (key: number | ((prev: number) => number)) => void;
 }
 
 export function PreviewPanel({
@@ -40,14 +40,14 @@ export function PreviewPanel({
         defaultUrl={currentChat?.demo || ''}
         onUrlChange={(url) => {
           // Optional: Handle URL changes if needed
-          console.log('Preview URL changed:', url)
+          console.log('Preview URL changed:', url);
         }}
       >
         <WebPreviewNavigation>
           <WebPreviewNavigationButton
             onClick={() => {
               // Force refresh the iframe by updating the refresh key
-              setRefreshKey((prev) => prev + 1)
+              setRefreshKey((prev) => prev + 1);
             }}
             tooltip="Refresh preview"
             disabled={!currentChat?.demo}
@@ -88,5 +88,5 @@ export function PreviewPanel({
         )}
       </WebPreview>
     </div>
-  )
+  );
 }

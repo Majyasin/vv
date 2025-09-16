@@ -1,4 +1,4 @@
-import 'server-only'
+import 'server-only';
 
 import {
   and,
@@ -11,26 +11,25 @@ import {
   inArray,
   lt,
   type SQL,
-} from 'drizzle-orm'
-
+} from 'drizzle-orm';
+import { generateUUID } from '../utils';
+import db from './connection';
 import {
-  users,
-  chat_ownerships,
-  anonymous_chat_logs,
-  type User,
-  type ChatOwnership,
   type AnonymousChatLog,
-} from './schema'
-import { generateUUID } from '../utils'
-import { generateHashedPassword } from './utils'
-import db from './connection'
+  anonymous_chat_logs,
+  type ChatOwnership,
+  chat_ownerships,
+  type User,
+  users,
+} from './schema';
+import { generateHashedPassword } from './utils';
 
 export async function getUser(email: string): Promise<Array<User>> {
   try {
-    return await db.select().from(users).where(eq(users.email, email))
+    return await db.select().from(users).where(eq(users.email, email));
   } catch (error) {
-    console.error('Failed to get user from database')
-    throw error
+    console.error('Failed to get user from database');
+    throw error;
   }
 }
 
@@ -39,24 +38,24 @@ export async function createUser(
   password: string,
 ): Promise<User[]> {
   try {
-    const hashedPassword = generateHashedPassword(password)
+    const hashedPassword = generateHashedPassword(password);
     return await db
       .insert(users)
       .values({
         email,
         password: hashedPassword,
       })
-      .returning()
+      .returning();
   } catch (error) {
-    console.error('Failed to create user in database')
-    throw error
+    console.error('Failed to create user in database');
+    throw error;
   }
 }
 
 export async function createGuestUser(): Promise<User[]> {
   try {
-    const guestId = generateUUID()
-    const guestEmail = `guest-${guestId}@example.com`
+    const guestId = generateUUID();
+    const guestEmail = `guest-${guestId}@example.com`;
 
     return await db
       .insert(users)
@@ -64,10 +63,10 @@ export async function createGuestUser(): Promise<User[]> {
         email: guestEmail,
         password: null,
       })
-      .returning()
+      .returning();
   } catch (error) {
-    console.error('Failed to create guest user in database')
-    throw error
+    console.error('Failed to create guest user in database');
+    throw error;
   }
 }
 
@@ -76,8 +75,8 @@ export async function createChatOwnership({
   v0ChatId,
   userId,
 }: {
-  v0ChatId: string
-  userId: string
+  v0ChatId: string;
+  userId: string;
 }) {
   try {
     return await db
@@ -86,10 +85,10 @@ export async function createChatOwnership({
         v0_chat_id: v0ChatId,
         user_id: userId,
       })
-      .onConflictDoNothing({ target: chat_ownerships.v0_chat_id })
+      .onConflictDoNothing({ target: chat_ownerships.v0_chat_id });
   } catch (error) {
-    console.error('Failed to create chat ownership in database')
-    throw error
+    console.error('Failed to create chat ownership in database');
+    throw error;
   }
 }
 
@@ -98,30 +97,30 @@ export async function getChatOwnership({ v0ChatId }: { v0ChatId: string }) {
     const [ownership] = await db
       .select()
       .from(chat_ownerships)
-      .where(eq(chat_ownerships.v0_chat_id, v0ChatId))
-    return ownership
+      .where(eq(chat_ownerships.v0_chat_id, v0ChatId));
+    return ownership;
   } catch (error) {
-    console.error('Failed to get chat ownership from database')
-    throw error
+    console.error('Failed to get chat ownership from database');
+    throw error;
   }
 }
 
 export async function getChatIdsByUserId({
   userId,
 }: {
-  userId: string
+  userId: string;
 }): Promise<string[]> {
   try {
     const ownerships = await db
       .select({ v0ChatId: chat_ownerships.v0_chat_id })
       .from(chat_ownerships)
       .where(eq(chat_ownerships.user_id, userId))
-      .orderBy(desc(chat_ownerships.created_at))
+      .orderBy(desc(chat_ownerships.created_at));
 
-    return ownerships.map((o: { v0ChatId: string }) => o.v0ChatId)
+    return ownerships.map((o: { v0ChatId: string }) => o.v0ChatId);
   } catch (error) {
-    console.error('Failed to get chat IDs by user from database')
-    throw error
+    console.error('Failed to get chat IDs by user from database');
+    throw error;
   }
 }
 
@@ -129,10 +128,10 @@ export async function deleteChatOwnership({ v0ChatId }: { v0ChatId: string }) {
   try {
     return await db
       .delete(chat_ownerships)
-      .where(eq(chat_ownerships.v0_chat_id, v0ChatId))
+      .where(eq(chat_ownerships.v0_chat_id, v0ChatId));
   } catch (error) {
-    console.error('Failed to delete chat ownership from database')
-    throw error
+    console.error('Failed to delete chat ownership from database');
+    throw error;
   }
 }
 
@@ -141,11 +140,11 @@ export async function getChatCountByUserId({
   userId,
   differenceInHours,
 }: {
-  userId: string
-  differenceInHours: number
+  userId: string;
+  differenceInHours: number;
 }): Promise<number> {
   try {
-    const hoursAgo = new Date(Date.now() - differenceInHours * 60 * 60 * 1000)
+    const hoursAgo = new Date(Date.now() - differenceInHours * 60 * 60 * 1000);
 
     const [stats] = await db
       .select({ count: count(chat_ownerships.id) })
@@ -155,12 +154,12 @@ export async function getChatCountByUserId({
           eq(chat_ownerships.user_id, userId),
           gte(chat_ownerships.created_at, hoursAgo),
         ),
-      )
+      );
 
-    return stats?.count || 0
+    return stats?.count || 0;
   } catch (error) {
-    console.error('Failed to get chat count by user from database')
-    throw error
+    console.error('Failed to get chat count by user from database');
+    throw error;
   }
 }
 
@@ -168,11 +167,11 @@ export async function getChatCountByIP({
   ipAddress,
   differenceInHours,
 }: {
-  ipAddress: string
-  differenceInHours: number
+  ipAddress: string;
+  differenceInHours: number;
 }): Promise<number> {
   try {
-    const hoursAgo = new Date(Date.now() - differenceInHours * 60 * 60 * 1000)
+    const hoursAgo = new Date(Date.now() - differenceInHours * 60 * 60 * 1000);
 
     const [stats] = await db
       .select({ count: count(anonymous_chat_logs.id) })
@@ -182,12 +181,12 @@ export async function getChatCountByIP({
           eq(anonymous_chat_logs.ip_address, ipAddress),
           gte(anonymous_chat_logs.created_at, hoursAgo),
         ),
-      )
+      );
 
-    return stats?.count || 0
+    return stats?.count || 0;
   } catch (error) {
-    console.error('Failed to get chat count by IP from database')
-    throw error
+    console.error('Failed to get chat count by IP from database');
+    throw error;
   }
 }
 
@@ -195,16 +194,16 @@ export async function createAnonymousChatLog({
   ipAddress,
   v0ChatId,
 }: {
-  ipAddress: string
-  v0ChatId: string
+  ipAddress: string;
+  v0ChatId: string;
 }) {
   try {
     return await db.insert(anonymous_chat_logs).values({
       ip_address: ipAddress,
       v0_chat_id: v0ChatId,
-    })
+    });
   } catch (error) {
-    console.error('Failed to create anonymous chat log in database')
-    throw error
+    console.error('Failed to create anonymous chat log in database');
+    throw error;
   }
 }

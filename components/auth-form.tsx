@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { signInAction, signUpAction } from '@/app/(auth)/actions'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+import Link from 'next/link';
+import { useActionState } from 'react';
+import { signInAction, signUpAction } from '@/app/(auth)/actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface AuthFormProps {
-  type: 'signin' | 'signup'
+  type: 'signin' | 'signup';
 }
 
 export function AuthForm({ type }: AuthFormProps) {
   const [state, formAction, isPending] = useActionState(
     type === 'signin' ? signInAction : signUpAction,
     undefined,
-  )
+  );
 
   return (
     <form action={formAction} className="space-y-4">
@@ -73,5 +73,5 @@ export function AuthForm({ type }: AuthFormProps) {
         )}
       </div>
     </form>
-  )
+  );
 }

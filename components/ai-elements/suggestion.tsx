@@ -1,54 +1,54 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
-import { useEffect, useRef, useState } from 'react'
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
-export type SuggestionsProps = ComponentProps<typeof ScrollArea>
+export type SuggestionsProps = ComponentProps<typeof ScrollArea>;
 
 export const Suggestions = ({
   className,
   children,
   ...props
 }: SuggestionsProps) => {
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScrollability = () => {
     const scrollArea = scrollAreaRef.current?.querySelector(
       '[data-radix-scroll-area-viewport]',
-    ) as HTMLElement
-    if (!scrollArea) return
+    ) as HTMLElement;
+    if (!scrollArea) return;
 
-    const { scrollLeft, scrollWidth, clientWidth } = scrollArea
-    setCanScrollLeft(scrollLeft > 0)
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1) // -1 for rounding
-  }
+    const { scrollLeft, scrollWidth, clientWidth } = scrollArea;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1); // -1 for rounding
+  };
 
   useEffect(() => {
     const scrollArea = scrollAreaRef.current?.querySelector(
       '[data-radix-scroll-area-viewport]',
-    ) as HTMLElement
-    if (!scrollArea) return
+    ) as HTMLElement;
+    if (!scrollArea) return;
 
     // Check initial state
-    checkScrollability()
+    checkScrollability();
 
     // Add scroll listener
-    scrollArea.addEventListener('scroll', checkScrollability)
+    scrollArea.addEventListener('scroll', checkScrollability);
 
     // Add resize observer to handle container size changes
-    const resizeObserver = new ResizeObserver(checkScrollability)
-    resizeObserver.observe(scrollArea)
+    const resizeObserver = new ResizeObserver(checkScrollability);
+    resizeObserver.observe(scrollArea);
 
     return () => {
-      scrollArea.removeEventListener('scroll', checkScrollability)
-      resizeObserver.disconnect()
-    }
-  }, [children])
+      scrollArea.removeEventListener('scroll', checkScrollability);
+      resizeObserver.disconnect();
+    };
+  }, [children]);
 
   return (
     <div className="relative">
@@ -75,13 +75,13 @@ export const Suggestions = ({
         <ScrollBar className="hidden" orientation="horizontal" />
       </ScrollArea>
     </div>
-  )
-}
+  );
+};
 
 export type SuggestionProps = Omit<ComponentProps<typeof Button>, 'onClick'> & {
-  suggestion: string
-  onClick?: (suggestion: string) => void
-}
+  suggestion: string;
+  onClick?: (suggestion: string) => void;
+};
 
 export const Suggestion = ({
   suggestion,
@@ -93,8 +93,8 @@ export const Suggestion = ({
   ...props
 }: SuggestionProps) => {
   const handleClick = () => {
-    onClick?.(suggestion)
-  }
+    onClick?.(suggestion);
+  };
 
   return (
     <Button
@@ -107,5 +107,5 @@ export const Suggestion = ({
     >
       {children || suggestion}
     </Button>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
-import type { UserType } from '@/app/(auth)/auth'
+import type { UserType } from '@/app/(auth)/auth';
 
 interface Entitlements {
-  maxMessagesPerDay: number
+  maxMessagesPerDay: number;
 }
 
 export const entitlementsByUserType: Record<UserType, Entitlements> = {
@@ -18,9 +18,9 @@ export const entitlementsByUserType: Record<UserType, Entitlements> = {
   regular: {
     maxMessagesPerDay: 50,
   },
-}
+};
 
 // For anonymous users (no session)
 export const anonymousEntitlements: Entitlements = {
   maxMessagesPerDay: 3,
-}
+};

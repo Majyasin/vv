@@ -1,29 +1,29 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'next/navigation'
-import { AppHeader } from '@/components/shared/app-header'
-import { ChatMessages } from '@/components/chat/chat-messages'
-import { ChatInput } from '@/components/chat/chat-input'
-import { PreviewPanel } from '@/components/chat/preview-panel'
-import { ResizableLayout } from '@/components/shared/resizable-layout'
-import { useChat } from '@/hooks/use-chat'
-import { useStreaming } from '@/contexts/streaming-context'
-import { cn } from '@/lib/utils'
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import {
-  type ImageAttachment,
   clearPromptFromStorage,
-} from '@/components/ai-elements/prompt-input'
+  type ImageAttachment,
+} from '@/components/ai-elements/prompt-input';
+import { ChatInput } from '@/components/chat/chat-input';
+import { ChatMessages } from '@/components/chat/chat-messages';
+import { PreviewPanel } from '@/components/chat/preview-panel';
+import { AppHeader } from '@/components/shared/app-header';
+import { ResizableLayout } from '@/components/shared/resizable-layout';
+import { useStreaming } from '@/contexts/streaming-context';
+import { useChat } from '@/hooks/use-chat';
+import { cn } from '@/lib/utils';
 
 export function ChatDetailClient() {
-  const params = useParams()
-  const chatId = params.chatId as string
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
-  const [attachments, setAttachments] = useState<ImageAttachment[]>([])
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const params = useParams();
+  const chatId = params.chatId as string;
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [attachments, setAttachments] = useState<ImageAttachment[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { handoff } = useStreaming()
+  const { handoff } = useStreaming();
   const {
     message,
     setMessage,
@@ -36,7 +36,7 @@ export function ChatDetailClient() {
     handleSendMessage,
     handleStreamingComplete,
     handleChatData,
-  } = useChat(chatId)
+  } = useChat(chatId);
 
   // Wrapper function to handle attachments
   const handleSubmitWithAttachments = (
@@ -44,30 +44,30 @@ export function ChatDetailClient() {
     attachmentUrls?: Array<{ url: string }>,
   ) => {
     // Clear sessionStorage immediately upon submission
-    clearPromptFromStorage()
+    clearPromptFromStorage();
     // Clear attachments after sending
-    setAttachments([])
-    return handleSendMessage(e, attachmentUrls)
-  }
+    setAttachments([]);
+    return handleSendMessage(e, attachmentUrls);
+  };
 
   // Handle fullscreen keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isFullscreen) {
-        setIsFullscreen(false)
+        setIsFullscreen(false);
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isFullscreen])
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
 
   // Auto-focus the textarea on page load
   useEffect(() => {
     if (textareaRef.current && !isLoadingChat) {
-      textareaRef.current.focus()
+      textareaRef.current.focus();
     }
-  }, [isLoadingChat])
+  }, [isLoadingChat]);
 
   return (
     <div
@@ -114,5 +114,5 @@ export function ChatDetailClient() {
         }
       />
     </div>
-  )
+  );
 }

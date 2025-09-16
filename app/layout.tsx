@@ -1,30 +1,30 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
-import { StreamingProvider } from '@/contexts/streaming-context'
-import { SWRProvider } from '@/components/providers/swr-provider'
-import { SessionProvider } from '@/components/providers/session-provider'
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { SessionProvider } from '@/components/providers/session-provider';
+import { SWRProvider } from '@/components/providers/swr-provider';
+import { StreamingProvider } from '@/contexts/streaming-context';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
-})
+});
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
-})
+});
 
 export const metadata: Metadata = {
   title: 'v0 Clone',
   description:
     'A clone of v0.dev built with the v0 SDK - Generate and preview React components with AI',
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -62,5 +62,5 @@ export default function RootLayout({
         </SessionProvider>
       </body>
     </html>
-  )
+  );
 }

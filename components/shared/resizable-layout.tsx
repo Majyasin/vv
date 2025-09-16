@@ -1,15 +1,16 @@
-'use client'
+'use client';
 
-import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface ResizableLayoutProps {
-  leftPanel: React.ReactNode
-  rightPanel: React.ReactNode
-  defaultLeftWidth?: number
-  minLeftWidth?: number
-  maxLeftWidth?: number
-  className?: string
+  leftPanel: React.ReactNode;
+  rightPanel: React.ReactNode;
+  defaultLeftWidth?: number;
+  minLeftWidth?: number;
+  maxLeftWidth?: number;
+  className?: string;
 }
 
 export function ResizableLayout({
@@ -20,52 +21,52 @@ export function ResizableLayout({
   maxLeftWidth = 60,
   className,
 }: ResizableLayoutProps) {
-  const [leftWidth, setLeftWidth] = useState(defaultLeftWidth)
-  const [isDragging, setIsDragging] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [leftWidth, setLeftWidth] = useState(defaultLeftWidth);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }, [])
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isDragging || !containerRef.current) return
+      if (!(isDragging && containerRef.current)) return;
 
-      const containerRect = containerRef.current.getBoundingClientRect()
+      const containerRect = containerRef.current.getBoundingClientRect();
       const newLeftWidth =
-        ((e.clientX - containerRect.left) / containerRect.width) * 100
+        ((e.clientX - containerRect.left) / containerRect.width) * 100;
 
       // Clamp the width between min and max
       const clampedWidth = Math.min(
         Math.max(newLeftWidth, minLeftWidth),
         maxLeftWidth,
-      )
-      setLeftWidth(clampedWidth)
+      );
+      setLeftWidth(clampedWidth);
     },
     [isDragging, minLeftWidth, maxLeftWidth],
-  )
+  );
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-  }, [])
+    setIsDragging(false);
+  }, []);
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = 'col-resize'
-      document.body.style.userSelect = 'none'
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
 
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-        document.body.style.cursor = ''
-        document.body.style.userSelect = ''
-      }
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
     }
-  }, [isDragging, handleMouseMove, handleMouseUp])
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   return (
     <div ref={containerRef} className={cn('flex h-full', className)}>
@@ -97,5 +98,5 @@ export function ResizableLayout({
       {/* Right Panel */}
       <div className="flex-1 flex flex-col">{rightPanel}</div>
     </div>
-  )
+  );
 }

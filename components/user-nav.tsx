@@ -1,8 +1,10 @@
-'use client'
+'use client';
 
-import { signOut } from 'next-auth/react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { LogOut, User } from 'lucide-react';
+import type { Session } from 'next-auth';
+import { signOut } from 'next-auth/react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +12,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { LogOut, User } from 'lucide-react'
-import { Session } from 'next-auth'
+} from '@/components/ui/dropdown-menu';
 
 interface UserNavProps {
-  session: Session | null
+  session: Session | null;
 }
 
 export function UserNav({ session }: UserNavProps) {
   const initials =
-    session?.user?.email?.split('@')[0]?.slice(0, 2)?.toUpperCase() || 'U'
+    session?.user?.email?.split('@')[0]?.slice(0, 2)?.toUpperCase() || 'U';
 
-  const isGuest = session?.user?.type === 'guest'
-  const isSignedOut = !session
+  const isGuest = session?.user?.type === 'guest';
+  const isSignedOut = !session;
 
   return (
     <DropdownMenu>
@@ -69,7 +69,7 @@ export function UserNav({ session }: UserNavProps) {
           <DropdownMenuItem
             onClick={async () => {
               // Clear any local session data first
-              await signOut({ callbackUrl: '/', redirect: true })
+              await signOut({ callbackUrl: '/', redirect: true });
             }}
             className="cursor-pointer"
           >
@@ -79,5 +79,5 @@ export function UserNav({ session }: UserNavProps) {
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

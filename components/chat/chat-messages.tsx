@@ -1,34 +1,34 @@
-import React, { useRef, useEffect } from 'react'
-import { Message, MessageContent } from '@/components/ai-elements/message'
+import { StreamingMessage } from '@v0-sdk/react';
+import React, { useEffect, useRef } from 'react';
 import {
   Conversation,
   ConversationContent,
-} from '@/components/ai-elements/conversation'
-import { Loader } from '@/components/ai-elements/loader'
-import { MessageRenderer } from '@/components/message-renderer'
-import { sharedComponents } from '@/components/shared-components'
-import { StreamingMessage } from '@v0-sdk/react'
+} from '@/components/ai-elements/conversation';
+import { Loader } from '@/components/ai-elements/loader';
+import { Message, MessageContent } from '@/components/ai-elements/message';
+import { MessageRenderer } from '@/components/message-renderer';
+import { sharedComponents } from '@/components/shared-components';
 
 interface ChatMessage {
-  type: 'user' | 'assistant'
-  content: string | any
-  isStreaming?: boolean
-  stream?: ReadableStream<Uint8Array> | null
+  type: 'user' | 'assistant';
+  content: string | any;
+  isStreaming?: boolean;
+  stream?: ReadableStream<Uint8Array> | null;
 }
 
 interface Chat {
-  id: string
-  demo?: string
-  url?: string
+  id: string;
+  demo?: string;
+  url?: string;
 }
 
 interface ChatMessagesProps {
-  chatHistory: ChatMessage[]
-  isLoading: boolean
-  currentChat: Chat | null
-  onStreamingComplete: (finalContent: any) => void
-  onChatData: (chatData: any) => void
-  onStreamingStarted?: () => void
+  chatHistory: ChatMessage[];
+  isLoading: boolean;
+  currentChat: Chat | null;
+  onStreamingComplete: (finalContent: any) => void;
+  onChatData: (chatData: any) => void;
+  onStreamingStarted?: () => void;
 }
 
 export function ChatMessages({
@@ -39,14 +39,14 @@ export function ChatMessages({
   onChatData,
   onStreamingStarted,
 }: ChatMessagesProps) {
-  const streamingStartedRef = useRef(false)
+  const streamingStartedRef = useRef(false);
 
   // Reset the streaming started flag when a new message starts loading
   useEffect(() => {
     if (isLoading) {
-      streamingStartedRef.current = false
+      streamingStartedRef.current = false;
     }
-  }, [isLoading])
+  }, [isLoading]);
 
   if (chatHistory.length === 0) {
     return (
@@ -57,7 +57,7 @@ export function ChatMessages({
           </div>
         </ConversationContent>
       </Conversation>
-    )
+    );
   }
 
   return (
@@ -76,8 +76,8 @@ export function ChatMessages({
                   onChunk={(chunk) => {
                     // Hide external loader once we start receiving content (only once)
                     if (onStreamingStarted && !streamingStartedRef.current) {
-                      streamingStartedRef.current = true
-                      onStreamingStarted()
+                      streamingStartedRef.current = true;
+                      onStreamingStarted();
                     }
                   }}
                   onError={(error) => console.error('Streaming error:', error)}
@@ -101,5 +101,5 @@ export function ChatMessages({
         </ConversationContent>
       </Conversation>
     </>
-  )
+  );
 }

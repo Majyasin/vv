@@ -1,35 +1,35 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Plus } from 'lucide-react'
-import { AppHeader } from '@/components/shared/app-header'
-import useSWR from 'swr'
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import useSWR from 'swr';
+import { AppHeader } from '@/components/shared/app-header';
 
 interface V0Chat {
-  id: string
-  object: 'chat'
-  name?: string
+  id: string;
+  object: 'chat';
+  name?: string;
   messages?: Array<{
-    role: 'user' | 'assistant'
-    content: string
-  }>
-  createdAt: string
-  updatedAt: string
+    role: 'user' | 'assistant';
+    content: string;
+  }>;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ChatsResponse {
-  object: 'list'
-  data: V0Chat[]
+  object: 'list';
+  data: V0Chat[];
 }
 
 export function ChatsClient() {
-  const { data, error, isLoading } = useSWR<ChatsResponse>('/api/chats')
-  const chats = data?.data || []
+  const { data, error, isLoading } = useSWR<ChatsResponse>('/api/chats');
+  const chats = data?.data || [];
 
   const getFirstUserMessage = (chat: V0Chat) => {
-    const firstUserMessage = chat.messages?.find((msg) => msg.role === 'user')
-    return firstUserMessage?.content || 'No messages'
-  }
+    const firstUserMessage = chat.messages?.find((msg) => msg.role === 'user');
+    return firstUserMessage?.content || 'No messages';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black">
@@ -38,7 +38,7 @@ export function ChatsClient() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
             <span className="ml-2 text-gray-600 dark:text-gray-300">
               Loading chats...
             </span>
@@ -60,7 +60,7 @@ export function ChatsClient() {
           </div>
         )}
 
-        {!isLoading && !error && (
+        {!(isLoading || error) && (
           <>
             <div className="mb-6 flex items-center justify-between">
               <div>
@@ -130,5 +130,5 @@ export function ChatsClient() {
         )}
       </main>
     </div>
-  )
+  );
 }
