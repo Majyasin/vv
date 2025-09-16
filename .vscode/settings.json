@@ -7,18 +7,18 @@
   },
   "css.lint.duplicateProperties": "warning",
   "css.lint.emptyRules": "warning",
+  "css.lint.unknownAtRules": "ignore",
   "debug.javascript.defaultRuntimeExecutable": {
     "pwa-node": "node"
   },
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.bracketPairColorization.enabled": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports.biome": "explicit",
-    "quickfix.biome": "explicit"
+    "source.fixAll.biome": "explicit"
   },
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "explicit",
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.defaultFormatter": "biomejs.biome",
   "editor.detectIndentation": false,
   "editor.fontFamily": "'Cascadia Mono', 'Fira Code', Consolas, 'Courier New', monospace",
   "editor.fontLigatures": true,
@@ -35,14 +35,6 @@
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  "eslint.codeActionsOnSave.mode": "all",
-  "eslint.enable": true,
-  "eslint.format.enable": true,
-  "eslint.lintTask.enable": true,
-  "eslint.options": {
-    "ignore": false
-  },
-  "eslint.run": "onSave",
   "explorer.sortOrder": "type",
   "extensions.ignoreRecommendations": false,
   "files.autoSave": "off",
@@ -81,36 +73,6 @@
   "window.zoomLevel": 1,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.iconTheme": "material-icon-theme",
-  "cSpell.words": [
-    "cmdk",
-    "Codestral",
-    "Customizer",
-    "doesn",
-    "ecommerce",
-    "embla",
-    "Gastby",
-    "glhf",
-    "GROQ",
-    "lucidereact",
-    "nanostores",
-    "nextui",
-    "Nuxt",
-    "ollama",
-    "OPENROUTER",
-    "pixtral",
-    "Rigth",
-    "shadcn",
-    "sonner",
-    "subid",
-    "Subprompt",
-    "uiid",
-    "userimg",
-    "vaul",
-    "vertexai",
-    "Sujal",
-    "Xplores"
-  ],
-  "[jsonc]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  }
+  "cSpell.words": [],
+  "css.customData": [".vscode/tailwind.json"]
 }

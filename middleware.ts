@@ -1,83 +1,85 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { guestRegex, isDevelopmentEnvironment } from './lib/constants';
 
-export function middleware(request: NextRequest) {
-  // Generate a unique nonce for each request
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-  // Check if we're in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  /*
+   * Playwright starts the dev server and requires a 200 status to
+   * begin the tests, so this ensures that the tests can start
+   */
+  if (pathname.startsWith('/ping')) {
+    return new Response('pong', { status: 200 });
+  }
 
-  // Create CSP header with appropriate policies for Next.js 15
-  const scriptSrc = isDevelopment
-    ? `'self' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net`
-    : `'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net`;
+  if (pathname.startsWith('/api/auth')) {
+    return NextResponse.next();
+  }
 
-  const styleSrc = isDevelopment
-    ? `'self' 'nonce-${nonce}' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com`
-    : `'self' 'nonce-${nonce}' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com`;
+  // Check for required environment variables
+  if (!process.env.AUTH_SECRET) {
+    console.error(
+      '❌ Missing AUTH_SECRET environment variable. Please check your .env file.',
+    );
+    return NextResponse.next(); // Let the app handle the error with better UI
+  }
 
-  const cspHeader = `
-    default-src 'self';
-    script-src ${scriptSrc};
-    script-src-elem 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net;
-    style-src ${styleSrc};
-    style-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
-    style-src-attr 'unsafe-inline';
-    font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net;
-    img-src 'self' blob: data: https:;
-    connect-src 'self' ${isDevelopment ? 'ws: wss:' : ''};
-    media-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    ${isDevelopment ? '' : 'upgrade-insecure-requests;'}
-  `;
-
-  // Replace newline characters and spaces
-  const contentSecurityPolicyHeaderValue = cspHeader
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
-  requestHeaders.set(
-    'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue,
-  );
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: !isDevelopmentEnvironment,
   });
 
-  response.headers.set(
-    'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue,
-  );
+  if (!token) {
+    // Allow API routes to proceed without authentication for anonymous chat creation
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.next();
+    }
 
-  return response;
+    // Allow homepage for anonymous users
+    if (pathname === '/') {
+      return NextResponse.next();
+    }
+
+    // Redirect protected pages to login
+    if (['/chats', '/projects'].some((path) => pathname.startsWith(path))) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    // Allow login and register pages
+    if (['/login', '/register'].includes(pathname)) {
+      return NextResponse.next();
+    }
+
+    // For any other protected routes, redirect to login
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  const isGuest = guestRegex.test(token?.email ?? '');
+
+  if (token && !isGuest && ['/login', '/register'].includes(pathname)) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
+    '/',
+    '/chats/:path*',
+    '/projects/:path*',
+    '/api/:path*',
+    '/login',
+    '/register',
+
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - _next/webpack-hmr (webpack hot reload)
-     * - favicon.ico (favicon file)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
-    {
-      source:
-        '/((?!api|_next/static|_next/image|_next/webpack-hmr|favicon.ico).*)',
-      missing: [
-        { type: 'header', key: 'next-router-prefetch' },
-        { type: 'header', key: 'purpose', value: 'prefetch' },
-      ],
-    },
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 };
