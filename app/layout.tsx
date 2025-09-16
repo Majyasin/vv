@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 import { SessionProvider } from '@/components/providers/session-provider';
 import { SWRProvider } from '@/components/providers/swr-provider';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 import { StreamingProvider } from '@/contexts/streaming-context';
 
 export const metadata: Metadata = {
@@ -25,11 +26,13 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className="antialiased">
-        <SessionProvider>
-          <SWRProvider>
-            <StreamingProvider>{children}</StreamingProvider>
-          </SWRProvider>
-        </SessionProvider>
+        <ThemeProvider>
+          <SessionProvider>
+            <SWRProvider>
+              <StreamingProvider>{children}</StreamingProvider>
+            </SWRProvider>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

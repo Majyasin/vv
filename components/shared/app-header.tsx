@@ -7,6 +7,7 @@ import { Suspense, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { GitHubIcon } from '@/components/ui/icons';
 import { UserNav } from '@/components/user-nav';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { ChatSelector } from './chat-selector';
 
 interface AppHeaderProps {
@@ -71,6 +72,7 @@ export function AppHeader({ className = '' }: AppHeaderProps) {
           </div>
 
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Button
               variant="outline"
               className="h-fit px-2 py-1.5 text-sm"
