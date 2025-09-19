@@ -20,8 +20,6 @@ Transform your ideas into production-ready React components using natural langua
 
 **Navigation:** [⚡ Quick Start](#quick-start) • [🚀 Features](#features) • [🛠️ Tech Stack](#tech-stack)
 
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSujalXplores%2Fv0.diy)
-
 ---
 
 ## 🚀 Features
