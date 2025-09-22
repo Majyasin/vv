@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { SWRConfig } from 'swr';
+import type { ReactNode } from "react";
+import { SWRConfig } from "swr";
 
 interface SWRProviderProps {
   children: ReactNode;
@@ -20,7 +20,7 @@ export function SWRProvider({ children }: SWRProviderProps) {
           fetch(url).then((res) => {
             if (!res.ok) {
               const error = new Error(
-                'An error occurred while fetching the data.'
+                "An error occurred while fetching the data.",
               ) as FetchError;
               error.info = res.json();
               error.status = res.status;

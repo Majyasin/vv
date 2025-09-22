@@ -1,16 +1,16 @@
-import { type MessageBinaryFormat, StreamingMessage } from '@v0-sdk/react';
-import { useEffect, useRef } from 'react';
+import { type MessageBinaryFormat, StreamingMessage } from "@v0-sdk/react";
+import { useEffect, useRef } from "react";
 import {
   Conversation,
   ConversationContent,
-} from '@/components/ai-elements/conversation';
-import { Loader } from '@/components/ai-elements/loader';
-import { Message } from '@/components/ai-elements/message';
-import { MessageRenderer } from '@/components/message-renderer';
-import { sharedComponents } from '@/components/shared-components';
+} from "@/components/ai-elements/conversation";
+import { Loader } from "@/components/ai-elements/loader";
+import { Message } from "@/components/ai-elements/message";
+import { MessageRenderer } from "@/components/message-renderer";
+import { sharedComponents } from "@/components/shared-components";
 
 interface ChatMessage {
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
   content: string | MessageBinaryFormat;
   isStreaming?: boolean;
   stream?: ReadableStream<Uint8Array> | null;
@@ -37,7 +37,7 @@ export function ChatMessages({
   onStreamingComplete,
   onChatData,
   onStreamingStarted,
-}: Omit<ChatMessagesProps, 'currentChat'>) {
+}: Omit<ChatMessagesProps, "currentChat">) {
   const streamingStartedRef = useRef(false);
 
   // Reset the streaming started flag when a new message starts loading
@@ -78,7 +78,7 @@ export function ChatMessages({
                     onStreamingStarted();
                   }
                 }}
-                onError={(error) => console.error('Streaming error:', error)}
+                onError={(error) => console.error("Streaming error:", error)}
                 components={sharedComponents}
                 showLoadingIndicator={false}
               />

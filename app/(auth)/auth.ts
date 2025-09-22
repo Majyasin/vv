@@ -1,31 +1,31 @@
-import { compare } from 'bcrypt-ts';
-import NextAuth, { type DefaultSession } from 'next-auth';
-import type { DefaultJWT } from 'next-auth/jwt';
-import Credentials from 'next-auth/providers/credentials';
-import { DUMMY_PASSWORD } from '@/lib/constants';
-import { createGuestUser, getUser } from '@/lib/db/queries';
-import { authConfig } from './auth.config';
+import { compare } from "bcrypt-ts";
+import NextAuth, { type DefaultSession } from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
+import Credentials from "next-auth/providers/credentials";
+import { DUMMY_PASSWORD } from "@/lib/constants";
+import { createGuestUser, getUser } from "@/lib/db/queries";
+import { authConfig } from "./auth.config";
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = process.env.NODE_ENV === "development";
 
 // Check for required environment variables
 // Set default AUTH_SECRET for development if missing
 if (!process.env.AUTH_SECRET && isDevelopment) {
   console.warn(
-    '⚠️  AUTH_SECRET not found. Using default secret for development.\n' +
-      'For production, please set AUTH_SECRET in your environment variables.\n',
+    "⚠️  AUTH_SECRET not found. Using default secret for development.\n" +
+      "For production, please set AUTH_SECRET in your environment variables.\n",
   );
-  process.env.AUTH_SECRET = 'dev-secret-key-not-for-production';
+  process.env.AUTH_SECRET = "dev-secret-key-not-for-production";
 }
 
-export type UserType = 'guest' | 'regular';
+export type UserType = "guest" | "regular";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
       type: UserType;
-    } & DefaultSession['user'];
+    } & DefaultSession["user"];
   }
 
   interface User {
@@ -35,7 +35,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     id: string;
     type: UserType;
@@ -52,8 +52,8 @@ export const {
   providers: [
     Credentials({
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!(credentials?.email && credentials?.password)) {
@@ -83,15 +83,15 @@ export const {
           return null;
         }
 
-        return { ...user, type: 'regular' };
+        return { ...user, type: "regular" };
       },
     }),
     Credentials({
-      id: 'guest',
+      id: "guest",
       credentials: {},
       async authorize() {
         const [guestUser] = await createGuestUser();
-        return { ...guestUser, type: 'guest' };
+        return { ...guestUser, type: "guest" };
       },
     }),
   ],

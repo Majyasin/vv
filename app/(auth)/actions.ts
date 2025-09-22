@@ -1,24 +1,24 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { AuthError } from 'next-auth';
-import { z } from 'zod';
-import { createUser, getUser } from '@/lib/db/queries';
-import { signIn } from './auth';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { AuthError } from "next-auth";
+import { z } from "zod";
+import { createUser, getUser } from "@/lib/db/queries";
+import { signIn } from "./auth";
 
 const signInSchema = z.object({
-  email: z.string().email('Please enter a valid email.'),
-  password: z.string().min(1, 'Password is required.'),
+  email: z.string().email("Please enter a valid email."),
+  password: z.string().min(1, "Password is required."),
 });
 
 const signUpSchema = z.object({
-  email: z.string().email('Please enter a valid email.'),
-  password: z.string().min(6, 'Password must be at least 6 characters.'),
+  email: z.string().email("Please enter a valid email."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 interface ActionResult {
-  type: 'error' | 'success';
+  type: "error" | "success";
   message: string;
 }
 
@@ -28,37 +28,37 @@ export async function signInAction(
 ): Promise<ActionResult> {
   try {
     const validatedData = signInSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password'),
+      email: formData.get("email"),
+      password: formData.get("password"),
     });
 
-    await signIn('credentials', {
+    await signIn("credentials", {
       email: validatedData.email,
       password: validatedData.password,
       redirect: false,
     });
 
-    revalidatePath('/');
-    redirect('/?refresh=session');
+    revalidatePath("/");
+    redirect("/?refresh=session");
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
-        type: 'error',
+        type: "error",
         message: error.issues[0].message,
       };
     }
 
     if (error instanceof AuthError) {
       switch (error.type) {
-        case 'CredentialsSignin':
+        case "CredentialsSignin":
           return {
-            type: 'error',
-            message: 'Invalid credentials. Please try again.',
+            type: "error",
+            message: "Invalid credentials. Please try again.",
           };
         default:
           return {
-            type: 'error',
-            message: 'Something went wrong. Please try again.',
+            type: "error",
+            message: "Something went wrong. Please try again.",
           };
       }
     }
@@ -74,22 +74,22 @@ export async function signUpAction(
 ): Promise<ActionResult> {
   try {
     const validatedData = signUpSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password'),
+      email: formData.get("email"),
+      password: formData.get("password"),
     });
 
     const existingUsers = await getUser(validatedData.email);
 
     if (existingUsers.length > 0) {
       return {
-        type: 'error',
-        message: 'User already exists. Please sign in instead.',
+        type: "error",
+        message: "User already exists. Please sign in instead.",
       };
     }
 
     await createUser(validatedData.email, validatedData.password);
 
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       email: validatedData.email,
       password: validatedData.password,
       redirect: false,
@@ -97,26 +97,26 @@ export async function signUpAction(
 
     if (result?.error) {
       return {
-        type: 'error',
+        type: "error",
         message:
-          'Failed to sign in after registration. Please try signing in manually.',
+          "Failed to sign in after registration. Please try signing in manually.",
       };
     }
 
-    revalidatePath('/');
-    redirect('/?refresh=session');
+    revalidatePath("/");
+    redirect("/?refresh=session");
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
-        type: 'error',
+        type: "error",
         message: error.issues[0].message,
       };
     }
 
     if (error instanceof AuthError) {
       return {
-        type: 'error',
-        message: 'Something went wrong. Please try again.',
+        type: "error",
+        message: "Something went wrong. Please try again.",
       };
     }
 

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { Suspense, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { GitHubIcon } from '@/components/ui/icons';
-import { UserNav } from '@/components/user-nav';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { ChatSelector } from './chat-selector';
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Suspense, useEffect } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { GitHubIcon } from "@/components/ui/icons";
+import { UserNav } from "@/components/user-nav";
+import { ChatSelector } from "./chat-selector";
 
 interface AppHeaderProps {
   className?: string;
@@ -21,7 +21,7 @@ function SearchParamsHandler() {
 
   // Force session refresh when redirected after auth
   useEffect(() => {
-    const shouldRefresh = searchParams.get('refresh') === 'session';
+    const shouldRefresh = searchParams.get("refresh") === "session";
 
     if (shouldRefresh) {
       // Force session update
@@ -29,25 +29,25 @@ function SearchParamsHandler() {
 
       // Clean up URL without causing navigation
       const url = new URL(window.location.href);
-      url.searchParams.delete('refresh');
-      window.history.replaceState({}, '', url.pathname);
+      url.searchParams.delete("refresh");
+      window.history.replaceState({}, "", url.pathname);
     }
   }, [searchParams, update]);
 
   return null;
 }
 
-export function AppHeader({ className = '' }: AppHeaderProps) {
+export function AppHeader({ className = "" }: AppHeaderProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const isHomepage = pathname === '/';
+  const isHomepage = pathname === "/";
 
   // Handle logo click - reset UI if on homepage, otherwise navigate to homepage
   const handleLogoClick = (e: React.MouseEvent) => {
     if (isHomepage) {
       e.preventDefault();
       // Add reset parameter to trigger UI reset
-      window.location.href = '/?reset=true';
+      window.location.href = "/?reset=true";
     }
     // If not on homepage, let the Link component handle navigation normally
   };

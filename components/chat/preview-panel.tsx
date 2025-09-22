@@ -1,12 +1,12 @@
-import { Maximize, Minimize, Monitor, RefreshCw } from 'lucide-react';
+import { Maximize, Minimize, Monitor, RefreshCw } from "lucide-react";
 import {
   WebPreview,
   WebPreviewBody,
   WebPreviewNavigation,
   WebPreviewNavigationButton,
   WebPreviewUrl,
-} from '@/components/ai-elements/web-preview';
-import { cn } from '@/lib/utils';
+} from "@/components/ai-elements/web-preview";
+import { cn } from "@/lib/utils";
 
 interface Chat {
   id: string;
@@ -32,15 +32,15 @@ export function PreviewPanel({
   return (
     <div
       className={cn(
-        'flex h-full flex-col transition-all duration-300',
-        isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-black' : 'flex-1',
+        "flex h-full flex-col transition-all duration-300",
+        isFullscreen ? "fixed inset-0 z-50 bg-white dark:bg-black" : "flex-1",
       )}
     >
       <WebPreview
-        defaultUrl={currentChat?.demo || ''}
+        defaultUrl={currentChat?.demo || ""}
         onUrlChange={(url) => {
           // Optional: Handle URL changes if needed
-          console.log('Preview URL changed:', url);
+          console.log("Preview URL changed:", url);
         }}
       >
         <WebPreviewNavigation>
@@ -57,11 +57,11 @@ export function PreviewPanel({
           <WebPreviewUrl
             readOnly
             placeholder="Your app will appear here..."
-            value={currentChat?.demo || ''}
+            value={currentChat?.demo || ""}
           />
           <WebPreviewNavigationButton
             onClick={() => setIsFullscreen(!isFullscreen)}
-            tooltip={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            tooltip={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
             disabled={!currentChat?.demo}
           >
             {isFullscreen ? (

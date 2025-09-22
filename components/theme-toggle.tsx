@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { forwardRef } from 'react';
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { forwardRef } from "react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 export const ThemeToggle = forwardRef<
   HTMLButtonElement,
@@ -13,7 +13,7 @@ export const ThemeToggle = forwardRef<
   const { theme, setTheme } = useTheme();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === "dark" ? "light" : "dark");
     if (onClick) {
       onClick(event);
     }
@@ -36,4 +36,4 @@ export const ThemeToggle = forwardRef<
   );
 });
 
-ThemeToggle.displayName = 'ThemeToggle';
+ThemeToggle.displayName = "ThemeToggle";

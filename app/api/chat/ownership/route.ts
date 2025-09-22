@@ -1,13 +1,13 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/app/(auth)/auth';
-import { createAnonymousChatLog, createChatOwnership } from '@/lib/db/queries';
+import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/app/(auth)/auth";
+import { createAnonymousChatLog, createChatOwnership } from "@/lib/db/queries";
 
 function getClientIP(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
+  const forwarded = request.headers.get("x-forwarded-for");
+  const realIP = request.headers.get("x-real-ip");
 
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    return forwarded.split(",")[0].trim();
   }
 
   if (realIP) {
@@ -15,7 +15,7 @@ function getClientIP(request: NextRequest): string {
   }
 
   // Fallback to connection remote address or unknown
-  return 'unknown';
+  return "unknown";
 }
 
 export async function POST(request: NextRequest) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     if (!chatId) {
       return NextResponse.json(
-        { error: 'Chat ID is required' },
+        { error: "Chat ID is required" },
         { status: 400 },
       );
     }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         v0ChatId: chatId,
         userId: session.user.id,
       });
-      console.log('Chat ownership created via API:', chatId);
+      console.log("Chat ownership created via API:", chatId);
     } else {
       // Anonymous user - log for rate limiting
       const clientIP = getClientIP(request);
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
         ipAddress: clientIP,
         v0ChatId: chatId,
       });
-      console.log('Anonymous chat logged via API:', chatId, 'IP:', clientIP);
+      console.log("Anonymous chat logged via API:", chatId, "IP:", clientIP);
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Failed to create chat ownership/log:', error);
+    console.error("Failed to create chat ownership/log:", error);
     return NextResponse.json(
-      { error: 'Failed to create ownership record' },
+      { error: "Failed to create ownership record" },
       { status: 500 },
     );
   }

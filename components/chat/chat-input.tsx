@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import {
   clearPromptFromStorage,
   createImageAttachment,
@@ -14,8 +14,8 @@ import {
   PromptInputToolbar,
   PromptInputTools,
   savePromptToStorage,
-} from '@/components/ai-elements/prompt-input';
-import { Suggestion, Suggestions } from '@/components/ai-elements/suggestion';
+} from "@/components/ai-elements/prompt-input";
+import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 
 interface ChatInputProps {
   message: string;
@@ -55,7 +55,7 @@ export function ChatInput({
         );
         onAttachmentsChange([...attachments, ...newAttachments]);
       } catch (error) {
-        console.error('Error processing image files:', error);
+        console.error("Error processing image files:", error);
       }
     },
     [attachments, onAttachmentsChange],
@@ -150,15 +150,15 @@ export function ChatInput({
             <PromptInputTools>
               <PromptInputMicButton
                 onTranscript={(transcript) => {
-                  setMessage(message + (message ? ' ' : '') + transcript);
+                  setMessage(message + (message ? " " : "") + transcript);
                 }}
                 onError={(error) => {
-                  console.error('Speech recognition error:', error);
+                  console.error("Speech recognition error:", error);
                 }}
               />
               <PromptInputSubmit
                 disabled={!message}
-                status={isLoading ? 'streaming' : 'ready'}
+                status={isLoading ? "streaming" : "ready"}
               />
             </PromptInputTools>
           </PromptInputToolbar>
@@ -169,7 +169,7 @@ export function ChatInput({
           <Suggestions>
             <Suggestion
               onClick={() => {
-                setMessage('Landing page');
+                setMessage("Landing page");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -182,7 +182,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Todo app');
+                setMessage("Todo app");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -195,7 +195,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Dashboard');
+                setMessage("Dashboard");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -208,7 +208,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Blog');
+                setMessage("Blog");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -221,7 +221,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('E-commerce');
+                setMessage("E-commerce");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -234,7 +234,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Portfolio');
+                setMessage("Portfolio");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -247,7 +247,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Chat app');
+                setMessage("Chat app");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;
@@ -260,7 +260,7 @@ export function ChatInput({
             />
             <Suggestion
               onClick={() => {
-                setMessage('Calculator');
+                setMessage("Calculator");
                 // Submit after setting message
                 setTimeout(() => {
                   const form = textareaRef?.current?.form;

@@ -1,11 +1,11 @@
-import { redirect } from 'next/navigation';
-import { signIn } from '@/app/(auth)/auth';
+import { redirect } from "next/navigation";
+import { signIn } from "@/app/(auth)/auth";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const redirectUrl = url.searchParams.get('redirectUrl');
+  const redirectUrl = url.searchParams.get("redirectUrl");
 
-  await signIn('guest', {
+  await signIn("guest", {
     redirect: false,
   });
 
@@ -13,5 +13,5 @@ export async function GET(request: Request) {
     redirect(redirectUrl);
   }
 
-  redirect('/');
+  redirect("/");
 }

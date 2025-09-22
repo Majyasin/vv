@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Copy, ExternalLink, MoreHorizontal, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Copy, ExternalLink, MoreHorizontal, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,14 +11,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 interface ChatMenuProps {
   chatId: string;
@@ -33,16 +33,16 @@ export function ChatMenu({ chatId }: ChatMenuProps) {
   const handleDuplicateChat = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/chat/fork', {
-        method: 'POST',
+      const response = await fetch("/api/chat/fork", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ chatId }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to duplicate chat');
+        throw new Error("Failed to duplicate chat");
       }
 
       const result = await response.json();
@@ -51,7 +51,7 @@ export function ChatMenu({ chatId }: ChatMenuProps) {
       setIsDuplicateDialogOpen(false);
       router.push(`/chats/${result.id}`);
     } catch (error) {
-      console.error('Error duplicating chat:', error);
+      console.error("Error duplicating chat:", error);
       // You could add a toast notification here
     } finally {
       setIsLoading(false);
@@ -61,23 +61,23 @@ export function ChatMenu({ chatId }: ChatMenuProps) {
   const handleDeleteChat = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/chat/delete', {
-        method: 'POST',
+      const response = await fetch("/api/chat/delete", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ chatId }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete chat');
+        throw new Error("Failed to delete chat");
       }
 
       // Close dialog and navigate back to homepage
       setIsDeleteDialogOpen(false);
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Error deleting chat:', error);
+      console.error("Error deleting chat:", error);
       // You could add a toast notification here
     } finally {
       setIsLoading(false);
@@ -151,7 +151,7 @@ export function ChatMenu({ chatId }: ChatMenuProps) {
               Cancel
             </Button>
             <Button onClick={handleDuplicateChat} disabled={isLoading}>
-              {isLoading ? 'Duplicating...' : 'Duplicate Chat'}
+              {isLoading ? "Duplicating..." : "Duplicate Chat"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -180,7 +180,7 @@ export function ChatMenu({ chatId }: ChatMenuProps) {
               onClick={handleDeleteChat}
               disabled={isLoading}
             >
-              {isLoading ? 'Deleting...' : 'Delete Chat'}
+              {isLoading ? "Deleting..." : "Delete Chat"}
             </Button>
           </DialogFooter>
         </DialogContent>

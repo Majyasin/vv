@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ResizableLayoutProps {
   leftPanel: React.ReactNode;
@@ -43,11 +43,11 @@ export function ResizableLayout({
       // Clamp the width between min and max
       const clampedWidth = Math.min(
         Math.max(newLeftWidth, minLeftWidth),
-        maxLeftWidth
+        maxLeftWidth,
       );
       setLeftWidth(clampedWidth);
     },
-    [isDragging, minLeftWidth, maxLeftWidth]
+    [isDragging, minLeftWidth, maxLeftWidth],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -56,22 +56,22 @@ export function ResizableLayout({
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
 
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
   return (
-    <div ref={containerRef} className={cn('flex h-full', className)}>
+    <div ref={containerRef} className={cn("flex h-full", className)}>
       {/* Left Panel */}
       <div className="flex flex-col" style={{ width: `${leftWidth}%` }}>
         {leftPanel}
@@ -80,8 +80,8 @@ export function ResizableLayout({
       {/* Resize Handle */}
       <div
         className={cn(
-          'group relative w-px cursor-col-resize bg-border transition-all dark:bg-input',
-          isDragging && 'bg-blue-500 dark:bg-blue-400'
+          "group relative w-px cursor-col-resize bg-border transition-all dark:bg-input",
+          isDragging && "bg-blue-500 dark:bg-blue-400",
         )}
         onMouseDown={handleMouseDown}
         role="separator"
@@ -92,9 +92,9 @@ export function ResizableLayout({
         aria-valuemax={90}
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
             e.preventDefault();
-            const delta = e.key === 'ArrowLeft' ? -5 : 5;
+            const delta = e.key === "ArrowLeft" ? -5 : 5;
             const newLeftWidth = Math.max(10, Math.min(90, leftWidth + delta));
             setLeftWidth(newLeftWidth);
           }
@@ -103,9 +103,9 @@ export function ResizableLayout({
         {/* Blue highlight on hover - 3px wide */}
         <div
           className={cn(
-            '-translate-x-1/2 absolute inset-y-0 left-1/2 w-0 bg-blue-500 transition-all duration-200 dark:bg-blue-400',
-            'group-hover:w-[3px]',
-            isDragging && 'w-[3px]'
+            "-translate-x-1/2 absolute inset-y-0 left-1/2 w-0 bg-blue-500 transition-all duration-200 dark:bg-blue-400",
+            "group-hover:w-[3px]",
+            isDragging && "w-[3px]",
           )}
         />
         {/* Wider hit area for better UX */}

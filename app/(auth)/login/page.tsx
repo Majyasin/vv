@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
-import { AuthForm } from '@/components/auth-form';
-import { auth } from '../auth';
+import { redirect } from "next/navigation";
+import { AuthForm } from "@/components/auth-form";
+import { auth } from "../auth";
 
 export default async function LoginPage() {
   const session = await auth();
 
   if (session) {
-    redirect('/');
+    redirect("/");
   }
 
   return (

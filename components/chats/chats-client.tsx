@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
-import useSWR from 'swr';
-import { AppHeader } from '@/components/shared/app-header';
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import useSWR from "swr";
+import { AppHeader } from "@/components/shared/app-header";
 
 interface V0Chat {
   id: string;
-  object: 'chat';
+  object: "chat";
   name?: string;
   messages?: Array<{
-    role: 'user' | 'assistant';
+    role: "user" | "assistant";
     content: string;
   }>;
   createdAt: string;
@@ -18,17 +18,17 @@ interface V0Chat {
 }
 
 interface ChatsResponse {
-  object: 'list';
+  object: "list";
   data: V0Chat[];
 }
 
 export function ChatsClient() {
-  const { data, error, isLoading } = useSWR<ChatsResponse>('/api/chats');
+  const { data, error, isLoading } = useSWR<ChatsResponse>("/api/chats");
   const chats = data?.data || [];
 
   const getFirstUserMessage = (chat: V0Chat) => {
-    const firstUserMessage = chat.messages?.find((msg) => msg.role === 'user');
-    return firstUserMessage?.content || 'No messages';
+    const firstUserMessage = chat.messages?.find((msg) => msg.role === "user");
+    return firstUserMessage?.content || "No messages";
   };
 
   return (
@@ -53,7 +53,7 @@ export function ChatsClient() {
                   Error loading chats
                 </h3>
                 <p className="mt-1 text-red-700 text-sm dark:text-red-300">
-                  {error.message || 'Failed to load chats'}
+                  {error.message || "Failed to load chats"}
                 </p>
               </div>
             </div>
@@ -68,7 +68,7 @@ export function ChatsClient() {
                   Chats
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300">
-                  {chats.length} {chats.length === 1 ? 'chat' : 'chats'}
+                  {chats.length} {chats.length === 1 ? "chat" : "chats"}
                 </p>
               </div>
               <Link
@@ -116,7 +116,7 @@ export function ChatsClient() {
                             <span>{chat.messages?.length || 0} messages</span>
                           </div>
                           <p className="mt-2 text-gray-500 text-sm dark:text-gray-400">
-                            Updated{' '}
+                            Updated{" "}
                             {new Date(chat.updatedAt).toLocaleDateString()}
                           </p>
                         </div>

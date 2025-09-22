@@ -39,7 +39,7 @@
   "extensions.ignoreRecommendations": false,
   "files.autoSave": "off",
   "files.eol": "\n",
-  "javascript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "double",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "less.lint.duplicateProperties": "warning",
   "less.lint.emptyRules": "warning",

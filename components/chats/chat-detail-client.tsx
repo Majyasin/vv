@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
   clearPromptFromStorage,
   type ImageAttachment,
-} from '@/components/ai-elements/prompt-input';
-import { ChatInput } from '@/components/chat/chat-input';
-import { ChatMessages } from '@/components/chat/chat-messages';
-import { PreviewPanel } from '@/components/chat/preview-panel';
-import { AppHeader } from '@/components/shared/app-header';
-import { ResizableLayout } from '@/components/shared/resizable-layout';
-import { useChat } from '@/hooks/use-chat';
-import { cn } from '@/lib/utils';
+} from "@/components/ai-elements/prompt-input";
+import { ChatInput } from "@/components/chat/chat-input";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import { PreviewPanel } from "@/components/chat/preview-panel";
+import { AppHeader } from "@/components/shared/app-header";
+import { ResizableLayout } from "@/components/shared/resizable-layout";
+import { useChat } from "@/hooks/use-chat";
+import { cn } from "@/lib/utils";
 
 export function ChatDetailClient() {
   const params = useParams();
@@ -38,7 +38,7 @@ export function ChatDetailClient() {
   // Wrapper function to handle attachments
   const handleSubmitWithAttachments = (
     e: React.FormEvent<HTMLFormElement>,
-    attachmentUrls?: Array<{ url: string }>
+    attachmentUrls?: Array<{ url: string }>,
   ) => {
     // Clear sessionStorage immediately upon submission
     clearPromptFromStorage();
@@ -50,13 +50,13 @@ export function ChatDetailClient() {
   // Handle fullscreen keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isFullscreen) {
+      if (event.key === "Escape" && isFullscreen) {
         setIsFullscreen(false);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isFullscreen]);
 
   // Auto-focus the textarea on page load
@@ -69,8 +69,8 @@ export function ChatDetailClient() {
   return (
     <div
       className={cn(
-        'min-h-screen bg-gray-50 dark:bg-black',
-        isFullscreen && 'fixed inset-0 z-50'
+        "min-h-screen bg-gray-50 dark:bg-black",
+        isFullscreen && "fixed inset-0 z-50",
       )}
     >
       <AppHeader />

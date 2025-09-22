@@ -1,21 +1,21 @@
-import 'server-only';
+import "server-only";
 
-import { and, count, desc, eq, gte } from 'drizzle-orm';
-import { generateUUID } from '../utils';
-import db from './connection';
+import { and, count, desc, eq, gte } from "drizzle-orm";
+import { generateUUID } from "../utils";
+import db from "./connection";
 import {
   anonymous_chat_logs,
   chat_ownerships,
   type User,
   users,
-} from './schema';
-import { generateHashedPassword } from './utils';
+} from "./schema";
+import { generateHashedPassword } from "./utils";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
     return await db.select().from(users).where(eq(users.email, email));
   } catch (error) {
-    console.error('Failed to get user from database');
+    console.error("Failed to get user from database");
     throw error;
   }
 }
@@ -34,7 +34,7 @@ export async function createUser(
       })
       .returning();
   } catch (error) {
-    console.error('Failed to create user in database');
+    console.error("Failed to create user in database");
     throw error;
   }
 }
@@ -52,7 +52,7 @@ export async function createGuestUser(): Promise<User[]> {
       })
       .returning();
   } catch (error) {
-    console.error('Failed to create guest user in database');
+    console.error("Failed to create guest user in database");
     throw error;
   }
 }
@@ -74,7 +74,7 @@ export async function createChatOwnership({
       })
       .onConflictDoNothing({ target: chat_ownerships.v0_chat_id });
   } catch (error) {
-    console.error('Failed to create chat ownership in database');
+    console.error("Failed to create chat ownership in database");
     throw error;
   }
 }
@@ -87,7 +87,7 @@ export async function getChatOwnership({ v0ChatId }: { v0ChatId: string }) {
       .where(eq(chat_ownerships.v0_chat_id, v0ChatId));
     return ownership;
   } catch (error) {
-    console.error('Failed to get chat ownership from database');
+    console.error("Failed to get chat ownership from database");
     throw error;
   }
 }
@@ -106,7 +106,7 @@ export async function getChatIdsByUserId({
 
     return ownerships.map((o: { v0ChatId: string }) => o.v0ChatId);
   } catch (error) {
-    console.error('Failed to get chat IDs by user from database');
+    console.error("Failed to get chat IDs by user from database");
     throw error;
   }
 }
@@ -117,7 +117,7 @@ export async function deleteChatOwnership({ v0ChatId }: { v0ChatId: string }) {
       .delete(chat_ownerships)
       .where(eq(chat_ownerships.v0_chat_id, v0ChatId));
   } catch (error) {
-    console.error('Failed to delete chat ownership from database');
+    console.error("Failed to delete chat ownership from database");
     throw error;
   }
 }
@@ -145,7 +145,7 @@ export async function getChatCountByUserId({
 
     return stats?.count || 0;
   } catch (error) {
-    console.error('Failed to get chat count by user from database');
+    console.error("Failed to get chat count by user from database");
     throw error;
   }
 }
@@ -172,7 +172,7 @@ export async function getChatCountByIP({
 
     return stats?.count || 0;
   } catch (error) {
-    console.error('Failed to get chat count by IP from database');
+    console.error("Failed to get chat count by IP from database");
     throw error;
   }
 }
@@ -190,7 +190,7 @@ export async function createAnonymousChatLog({
       v0_chat_id: v0ChatId,
     });
   } catch (error) {
-    console.error('Failed to create anonymous chat log in database');
+    console.error("Failed to create anonymous chat log in database");
     throw error;
   }
 }

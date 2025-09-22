@@ -1,7 +1,7 @@
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
-import { useStreaming } from '@/contexts/streaming-context';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import useSWR, { mutate } from "swr";
+import { useStreaming } from "@/contexts/streaming-context";
 
 interface Chat {
   id: string;
@@ -9,14 +9,14 @@ interface Chat {
   url?: string;
   messages?: Array<{
     id: string;
-    role: 'user' | 'assistant';
+    role: "user" | "assistant";
     content: string;
     experimental_content?: any;
   }>;
 }
 
 interface ChatMessage {
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
   content: string | any;
   isStreaming?: boolean;
   stream?: ReadableStream<Uint8Array> | null;
@@ -25,44 +25,44 @@ interface ChatMessage {
 export function useChat(chatId: string) {
   const router = useRouter();
   const { handoff, clearHandoff } = useStreaming();
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
 
   // Use SWR to fetch chat data
-  const {
-    data: currentChat,
-    isLoading: isLoadingChat,
-  } = useSWR<Chat>(chatId ? `/api/chats/${chatId}` : null, {
-    onError: (error) => {
-      console.error('Error loading chat:', error);
-      // Redirect to home if chat not found
-      router.push('/');
+  const { data: currentChat, isLoading: isLoadingChat } = useSWR<Chat>(
+    chatId ? `/api/chats/${chatId}` : null,
+    {
+      onError: (error) => {
+        console.error("Error loading chat:", error);
+        // Redirect to home if chat not found
+        router.push("/");
+      },
+      onSuccess: (chat) => {
+        // Update chat history with existing messages when chat loads
+        // But skip if we have a handoff (streaming from homepage) to avoid duplicates
+        if (
+          chat.messages &&
+          chatHistory.length === 0 &&
+          !(handoff.chatId === chatId && handoff.stream)
+        ) {
+          setChatHistory(
+            chat.messages.map((msg) => ({
+              type: msg.role,
+              // Use experimental_content if available, otherwise fall back to plain content
+              content: msg.experimental_content || msg.content,
+            })),
+          );
+        }
+      },
     },
-    onSuccess: (chat) => {
-      // Update chat history with existing messages when chat loads
-      // But skip if we have a handoff (streaming from homepage) to avoid duplicates
-      if (
-        chat.messages &&
-        chatHistory.length === 0 &&
-        !(handoff.chatId === chatId && handoff.stream)
-      ) {
-        setChatHistory(
-          chat.messages.map((msg) => ({
-            type: msg.role,
-            // Use experimental_content if available, otherwise fall back to plain content
-            content: msg.experimental_content || msg.content,
-          })),
-        );
-      }
-    },
-  });
+  );
 
   // Handle streaming from context (when redirected from homepage)
   useEffect(() => {
     if (handoff.chatId === chatId && handoff.stream && handoff.userMessage) {
-      console.log('Continuing streaming from context for chat:', chatId);
+      console.log("Continuing streaming from context for chat:", chatId);
 
       const userMessage = handoff.userMessage; // Safe to access here due to condition check
 
@@ -70,7 +70,7 @@ export function useChat(chatId: string) {
       setChatHistory((prev) => [
         ...prev,
         {
-          type: 'user',
+          type: "user",
           content: userMessage,
         },
       ]);
@@ -80,7 +80,7 @@ export function useChat(chatId: string) {
       setChatHistory((prev) => [
         ...prev,
         {
-          type: 'assistant',
+          type: "assistant",
           content: [],
           isStreaming: true,
           stream: handoff.stream,
@@ -102,17 +102,17 @@ export function useChat(chatId: string) {
     }
 
     const userMessage = message.trim();
-    setMessage('');
+    setMessage("");
     setIsLoading(true);
 
-    setChatHistory((prev) => [...prev, { type: 'user', content: userMessage }]);
+    setChatHistory((prev) => [...prev, { type: "user", content: userMessage }]);
 
     try {
       // Use streaming mode
-      const response = await fetch('/api/chat', {
-        method: 'POST',
+      const response = await fetch("/api/chat", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: userMessage,
@@ -125,27 +125,27 @@ export function useChat(chatId: string) {
       if (!response.ok) {
         // Try to get the specific error message from the response
         let errorMessage =
-          'Sorry, there was an error processing your message. Please try again.';
+          "Sorry, there was an error processing your message. Please try again.";
         try {
           const errorData = await response.json();
           if (errorData.message) {
             errorMessage = errorData.message;
           } else if (response.status === 429) {
             errorMessage =
-              'You have exceeded your maximum number of messages for the day. Please try again later.';
+              "You have exceeded your maximum number of messages for the day. Please try again later.";
           }
         } catch (parseError) {
-          console.error('Error parsing error response:', parseError);
+          console.error("Error parsing error response:", parseError);
           if (response.status === 429) {
             errorMessage =
-              'You have exceeded your maximum number of messages for the day. Please try again later.';
+              "You have exceeded your maximum number of messages for the day. Please try again later.";
           }
         }
         throw new Error(errorMessage);
       }
 
       if (!response.body) {
-        throw new Error('No response body for streaming');
+        throw new Error("No response body for streaming");
       }
 
       setIsStreaming(true);
@@ -155,25 +155,25 @@ export function useChat(chatId: string) {
       setChatHistory((prev) => [
         ...prev,
         {
-          type: 'assistant',
+          type: "assistant",
           content: [],
           isStreaming: true,
           stream: response.body,
         },
       ]);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
 
       // Use the specific error message if available, otherwise fall back to generic message
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Sorry, there was an error processing your message. Please try again.';
+          : "Sorry, there was an error processing your message. Please try again.";
 
       setChatHistory((prev) => [
         ...prev,
         {
-          type: 'assistant',
+          type: "assistant",
           content: errorMessage,
         },
       ]);
@@ -186,7 +186,7 @@ export function useChat(chatId: string) {
     setIsLoading(false);
 
     console.log(
-      'Stream completed with final content:',
+      "Stream completed with final content:",
       JSON.stringify(finalContent, null, 2),
     );
 
@@ -210,12 +210,12 @@ export function useChat(chatId: string) {
           false,
         );
       } else {
-        console.warn('Failed to fetch updated chat details:', response.status);
+        console.warn("Failed to fetch updated chat details:", response.status);
         // Fallback to just refreshing the cache
         mutate(`/api/chats/${chatId}`);
       }
     } catch (error) {
-      console.error('Error fetching updated chat details:', error);
+      console.error("Error fetching updated chat details:", error);
       // Fallback to just refreshing the cache
       mutate(`/api/chats/${chatId}`);
     }
@@ -226,26 +226,29 @@ export function useChat(chatId: string) {
 
       // Search through the content structure for chat ID
       const searchForChatId = (obj: unknown) => {
-        if (obj && typeof obj === 'object') {
+        if (obj && typeof obj === "object") {
           const objRecord = obj as Record<string, unknown>;
 
           // Look for chat ID - be more specific about what we accept
-          if (objRecord.chatId && typeof objRecord.chatId === 'string') {
+          if (objRecord.chatId && typeof objRecord.chatId === "string") {
             // Validate that it looks like a real chat ID (UUID-like or specific format)
-            if (objRecord.chatId.length > 10 && objRecord.chatId !== 'hello-world') {
-              console.log('Accepting chatId:', objRecord.chatId);
+            if (
+              objRecord.chatId.length > 10 &&
+              objRecord.chatId !== "hello-world"
+            ) {
+              console.log("Accepting chatId:", objRecord.chatId);
               newChatId = objRecord.chatId;
             }
           }
 
           // Only use 'id' if it's specifically a chat context and looks like a real ID
-          if (!newChatId && objRecord.id && typeof objRecord.id === 'string') {
+          if (!newChatId && objRecord.id && typeof objRecord.id === "string") {
             // More restrictive check for 'id' field - should look like UUID or be longer
             if (
-              (objRecord.id.includes('-') && objRecord.id.length > 20) ||
-              (objRecord.id.length > 15 && objRecord.id !== 'hello-world')
+              (objRecord.id.includes("-") && objRecord.id.length > 20) ||
+              (objRecord.id.length > 15 && objRecord.id !== "hello-world")
             ) {
-              console.log('Accepting id as chatId:', objRecord.id);
+              console.log("Accepting id as chatId:", objRecord.id);
               newChatId = objRecord.id;
             }
           }
@@ -262,19 +265,19 @@ export function useChat(chatId: string) {
       finalContent.forEach(searchForChatId);
 
       if (newChatId) {
-        console.log('Found chat ID:', newChatId);
-        console.log('Fetching chat details to get demo URL...');
+        console.log("Found chat ID:", newChatId);
+        console.log("Fetching chat details to get demo URL...");
 
         try {
           // Fetch the full chat details to get the demo URL
           const response = await fetch(`/api/chats/${newChatId}`);
           if (response.ok) {
             const chatDetails = await response.json();
-            console.log('Chat details:', chatDetails);
+            console.log("Chat details:", chatDetails);
 
             const demoUrl =
               chatDetails?.latestVersion?.demoUrl || chatDetails?.demo;
-            console.log('Demo URL from chat details:', demoUrl);
+            console.log("Demo URL from chat details:", demoUrl);
 
             // Update SWR cache with new chat data
             mutate(
@@ -286,7 +289,7 @@ export function useChat(chatId: string) {
               false,
             );
           } else {
-            console.warn('Failed to fetch chat details:', response.status);
+            console.warn("Failed to fetch chat details:", response.status);
             // Update SWR cache with new chat data
             mutate(
               `/api/chats/${newChatId}`,
@@ -298,7 +301,7 @@ export function useChat(chatId: string) {
             );
           }
         } catch (error) {
-          console.error('Error fetching chat details:', error);
+          console.error("Error fetching chat details:", error);
           // Update SWR cache with new chat data
           mutate(
             `/api/chats/${newChatId}`,
@@ -310,7 +313,7 @@ export function useChat(chatId: string) {
           );
         }
       } else {
-        console.log('No chat ID found in final content');
+        console.log("No chat ID found in final content");
       }
     }
 

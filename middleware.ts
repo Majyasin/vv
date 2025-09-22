@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
-import { guestRegex, isDevelopmentEnvironment } from './lib/constants';
+import { type NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { guestRegex, isDevelopmentEnvironment } from "./lib/constants";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,18 +9,18 @@ export async function middleware(request: NextRequest) {
    * Playwright starts the dev server and requires a 200 status to
    * begin the tests, so this ensures that the tests can start
    */
-  if (pathname.startsWith('/ping')) {
-    return new Response('pong', { status: 200 });
+  if (pathname.startsWith("/ping")) {
+    return new Response("pong", { status: 200 });
   }
 
-  if (pathname.startsWith('/api/auth')) {
+  if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
   // Check for required environment variables
   if (!process.env.AUTH_SECRET) {
     console.error(
-      '❌ Missing AUTH_SECRET environment variable. Please check your .env file.',
+      "❌ Missing AUTH_SECRET environment variable. Please check your .env file.",
     );
     return NextResponse.next(); // Let the app handle the error with better UI
   }
@@ -33,33 +33,33 @@ export async function middleware(request: NextRequest) {
 
   if (!token) {
     // Allow API routes to proceed without authentication for anonymous chat creation
-    if (pathname.startsWith('/api/')) {
+    if (pathname.startsWith("/api/")) {
       return NextResponse.next();
     }
 
     // Allow homepage for anonymous users
-    if (pathname === '/') {
+    if (pathname === "/") {
       return NextResponse.next();
     }
 
     // Redirect protected pages to login
-    if (['/chats', '/projects'].some((path) => pathname.startsWith(path))) {
-      return NextResponse.redirect(new URL('/login', request.url));
+    if (["/chats", "/projects"].some((path) => pathname.startsWith(path))) {
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // Allow login and register pages
-    if (['/login', '/register'].includes(pathname)) {
+    if (["/login", "/register"].includes(pathname)) {
       return NextResponse.next();
     }
 
     // For any other protected routes, redirect to login
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const isGuest = guestRegex.test(token?.email ?? '');
+  const isGuest = guestRegex.test(token?.email ?? "");
 
-  if (token && !isGuest && ['/login', '/register'].includes(pathname)) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if (token && !isGuest && ["/login", "/register"].includes(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
@@ -67,12 +67,12 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/',
-    '/chats/:path*',
-    '/projects/:path*',
-    '/api/:path*',
-    '/login',
-    '/register',
+    "/",
+    "/chats/:path*",
+    "/projects/:path*",
+    "/api/:path*",
+    "/login",
+    "/register",
 
     /*
      * Match all request paths except for the ones starting with:
@@ -80,6 +80,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
-    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Check, Copy } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import type { MissingEnvVar } from '@/lib/env-check';
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { MissingEnvVar } from "@/lib/env-check";
 
 interface EnvSetupProps {
   missingVars: MissingEnvVar[];
@@ -19,7 +19,7 @@ export function EnvSetup({ missingVars }: EnvSetupProps) {
       }
       return `${envVar.name}=`;
     })
-    .join('\n');
+    .join("\n");
 
   const copyToClipboard = async () => {
     try {
@@ -27,7 +27,7 @@ export function EnvSetup({ missingVars }: EnvSetupProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      console.error("Failed to copy to clipboard:", error);
     }
   };
 
@@ -40,10 +40,10 @@ export function EnvSetup({ missingVars }: EnvSetupProps) {
               Setup Required
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              Add these environment variables to your{' '}
+              Add these environment variables to your{" "}
               <code className="rounded bg-gray-200 px-1 dark:bg-gray-800">
                 .env
-              </code>{' '}
+              </code>{" "}
               file:
             </p>
           </div>

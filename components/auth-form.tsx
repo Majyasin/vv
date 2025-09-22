@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useActionState } from 'react';
-import { signInAction, signUpAction } from '@/app/(auth)/actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import Link from "next/link";
+import { useActionState } from "react";
+import { signInAction, signUpAction } from "@/app/(auth)/actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface AuthFormProps {
-  type: 'signin' | 'signup';
+  type: "signin" | "signup";
 }
 
 export function AuthForm({ type }: AuthFormProps) {
   const [state, formAction, isPending] = useActionState(
-    type === 'signin' ? signInAction : signUpAction,
+    type === "signin" ? signInAction : signUpAction,
     undefined,
   );
 
@@ -37,35 +37,35 @@ export function AuthForm({ type }: AuthFormProps) {
           placeholder="Password"
           required
           className="w-full"
-          minLength={type === 'signup' ? 6 : 1}
+          minLength={type === "signup" ? 6 : 1}
         />
       </div>
 
-      {state?.type === 'error' && (
+      {state?.type === "error" && (
         <div className="text-red-500 text-sm">{state.message}</div>
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending
-          ? type === 'signin'
-            ? 'Signing in...'
-            : 'Creating account...'
-          : type === 'signin'
-            ? 'Sign In'
-            : 'Create Account'}
+          ? type === "signin"
+            ? "Signing in..."
+            : "Creating account..."
+          : type === "signin"
+            ? "Sign In"
+            : "Create Account"}
       </Button>
 
       <div className="text-center text-muted-foreground text-sm">
-        {type === 'signin' ? (
+        {type === "signin" ? (
           <>
-            Don&apos;t have an account?{' '}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-primary hover:underline">
               Sign up
             </Link>
           </>
         ) : (
           <>
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link href="/login" className="text-primary hover:underline">
               Sign in
             </Link>
